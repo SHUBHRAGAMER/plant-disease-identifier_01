@@ -26,10 +26,6 @@ st.markdown(
     """
     <style>
 
-    /* ================================
-       GLOBAL
-    ================================= */
-
     .stApp {
         background:
             radial-gradient(
@@ -46,10 +42,6 @@ st.markdown(
         color: #e9fff7;
     }
 
-    body {
-        font-family: Arial, sans-serif;
-    }
-
     #MainMenu {
         visibility: hidden;
     }
@@ -62,10 +54,6 @@ st.markdown(
         background: transparent !important;
     }
 
-    /* ================================
-       HERO
-    ================================= */
-
     .hero {
         text-align: center;
         padding: 35px 10px 25px 10px;
@@ -73,7 +61,6 @@ st.markdown(
 
     .hero-icon {
         font-size: 60px;
-        filter: drop-shadow(0 0 20px #27e6a0);
         margin-bottom: 10px;
     }
 
@@ -82,9 +69,6 @@ st.markdown(
         font-weight: 900;
         letter-spacing: 5px;
         color: #eafff7;
-        text-shadow:
-            0 0 10px rgba(53, 220, 167, 0.7),
-            0 0 30px rgba(53, 220, 167, 0.35);
     }
 
     .hero-subtitle {
@@ -94,19 +78,12 @@ st.markdown(
         margin-top: 8px;
     }
 
-    /* ================================
-       GLASS CARDS
-    ================================= */
-
     .glass {
         background: rgba(12, 22, 19, 0.82);
         border: 1px solid rgba(53, 220, 167, 0.22);
         border-radius: 18px;
         padding: 25px;
         margin: 18px 0;
-        box-shadow:
-            0 0 25px rgba(0, 255, 170, 0.06),
-            inset 0 0 20px rgba(255,255,255,0.015);
     }
 
     .section-title {
@@ -123,21 +100,12 @@ st.markdown(
         line-height: 1.6;
     }
 
-    /* ================================
-       STATS
-    ================================= */
-
     .stat-card {
-        background: linear-gradient(
-            145deg,
-            rgba(17, 35, 29, 0.95),
-            rgba(7, 16, 13, 0.95)
-        );
-        border: 1px solid rgba(53,220,167,0.20);
+        background: rgba(12, 30, 24, 0.95);
+        border: 1px solid rgba(53, 220, 167, 0.20);
         border-radius: 15px;
         padding: 20px 10px;
         text-align: center;
-        box-shadow: 0 0 20px rgba(0,255,170,0.04);
     }
 
     .stat-number {
@@ -150,65 +118,14 @@ st.markdown(
         font-size: 11px;
         color: #829d94;
         letter-spacing: 2px;
-        margin-top: 5px;
     }
-
-    /* ================================
-       BUTTONS
-    ================================= */
-
-    .stButton > button {
-        border-radius: 12px !important;
-        border: 1px solid rgba(53,220,167,0.35) !important;
-        background: linear-gradient(
-            135deg,
-            #12352b,
-            #092019
-        ) !important;
-        color: #eafff7 !important;
-        font-weight: 700 !important;
-        min-height: 48px !important;
-        transition: 0.2s ease;
-    }
-
-    .stButton > button:hover {
-        border-color: #35dca7 !important;
-        box-shadow:
-            0 0 20px rgba(53,220,167,0.25) !important;
-        transform: translateY(-1px);
-    }
-
-    /* ================================
-       UPLOADER
-    ================================= */
-
-    [data-testid="stFileUploader"] {
-        background: rgba(7, 18, 14, 0.9);
-        border: 1px dashed rgba(53,220,167,0.45);
-        border-radius: 16px;
-        padding: 10px;
-    }
-
-    /* ================================
-       RESULT
-    ================================= */
 
     .result-card {
-        background:
-            radial-gradient(
-                circle at top right,
-                rgba(53,220,167,0.13),
-                transparent 40%
-            ),
-            rgba(8, 20, 16, 0.96);
-
-        border: 1px solid rgba(53,220,167,0.35);
+        background: rgba(8, 20, 16, 0.96);
+        border: 1px solid rgba(53, 220, 167, 0.35);
         border-radius: 20px;
         padding: 30px;
         margin: 25px 0;
-
-        box-shadow:
-            0 0 35px rgba(53,220,167,0.08);
     }
 
     .result-label {
@@ -232,13 +149,9 @@ st.markdown(
         font-weight: 800;
     }
 
-    /* ================================
-       CARE
-    ================================= */
-
     .care-card {
         background: rgba(9, 21, 17, 0.95);
-        border: 1px solid rgba(53,220,167,0.20);
+        border: 1px solid rgba(53, 220, 167, 0.20);
         border-radius: 15px;
         padding: 22px;
         margin-top: 15px;
@@ -263,10 +176,6 @@ st.markdown(
         border-bottom: 1px solid rgba(255,255,255,0.04);
         line-height: 1.5;
     }
-
-    /* ================================
-       SCANNING
-    ================================= */
 
     .scanning {
         text-align: center;
@@ -303,10 +212,6 @@ st.markdown(
         }
     }
 
-    /* ================================
-       FOOTER
-    ================================= */
-
     .footer {
         text-align: center;
         padding: 35px 10px;
@@ -323,7 +228,6 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-
 
 # ============================================================
 # LOAD MODEL
@@ -823,8 +727,6 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-
-
 # ============================================================
 # INTRO
 # ============================================================
