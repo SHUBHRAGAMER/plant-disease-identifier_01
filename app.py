@@ -595,7 +595,7 @@ PlantCare AI
 </div>
 
 <div class="hero-subtitle">
-Neural Plant Intelligence
+Neural Plant Intelligence By Shubhra Gautam
 </div>
 
 <div class="status">
