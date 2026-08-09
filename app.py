@@ -1419,47 +1419,79 @@ CARE_GUIDE = {
         ]
     }
 }
+# ====================================================
+# STATUS
+# ====================================================
 
+if "healthy" in best_class.lower():
 
-    # ====================================================
-    # STATUS
-    # ====================================================
+    st.success(
+        "🟢 HEALTH STATUS: The model predicts that "
+        "this plant appears healthy."
+    )
 
-    if "healthy" in best_class.lower():
+else:
 
-        st.success(
-            "🟢 HEALTH STATUS: The model predicts that "
-            "this plant appears healthy."
-        )
-
-    else:
-
-        st.warning(
-            "🔴 HEALTH STATUS: A possible plant disease "
-            "has been detected."
-        )
-
-
-    # ====================================================
-    # RECOMMENDED CARE
-    # ====================================================
-
-    st.markdown("---")
-
-    st.markdown(
-        """
-        <div class="section-title">
-        🌿 RECOMMENDED CARE
-        </div>
-
-        <div class="section-subtitle">
-        AI-generated care guidance based on the detected condition
-        </div>
-        """,
-        unsafe_allow_html=True
+    st.warning(
+        "🔴 HEALTH STATUS: A possible plant disease "
+        "has been detected."
     )
 
 
+# ====================================================
+# RECOMMENDED CARE
+# ====================================================
+
+st.markdown("---")
+
+st.subheader("🌿 Recommended Care")
+
+if confidence >= 60 and best_class in CARE_GUIDE:
+
+    care_info = CARE_GUIDE[best_class]
+
+    st.markdown(
+        f"### {care_info['title']}"
+    )
+
+    st.caption(
+        f"Category: {care_info['type']}"
+    )
+
+    st.markdown("#### 🩺 Recommended Actions")
+
+    for item in care_info["care"]:
+
+        st.markdown(
+            f"• {item}"
+        )
+
+else:
+
+    st.warning(
+        "⚠️ The model is not sufficiently confident "
+        "to provide disease-specific care advice. "
+        "Try uploading a clearer image."
+    )
+
+st.caption(
+    "Educational guidance only. AI predictions are not "
+    "a professional agricultural diagnosis."
+)
+
+
+# ====================================================
+# TOP PREDICTIONS
+# ====================================================
+
+st.markdown("""
+<div class="glass">
+
+<div class="section-title">
+📊 Neural Probability Matrix
+</div>
+
+""", unsafe_allow_html=True)
     # ----------------------------------------------------
     # CHECK CONFIDENCE
     # ----------------------------------------------------
