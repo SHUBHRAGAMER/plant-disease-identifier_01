@@ -898,24 +898,587 @@ if uploaded_file is not None:
             unsafe_allow_html=True
         )
 
-        # ====================================================
-        # STATUS
-        # ====================================================
+        # ============================================================
+# COMPLETE 38-CLASS CARE GUIDE
+# ============================================================
 
-        if "healthy" in best_class.lower():
+CARE_GUIDE = {
 
-            st.success(
-                "🟢 HEALTH STATUS: The model predicts that "
-                "this plant appears healthy."
+    # --------------------------------------------------------
+    # APPLE
+    # --------------------------------------------------------
+
+    "Apple___Apple_scab": {
+        "title": "🍎 Apple Scab",
+        "type": "Fungal disease",
+        "care": [
+            "Remove and dispose of heavily infected leaves and fallen plant debris.",
+            "Keep the area around the tree clean to reduce sources of infection.",
+            "Improve air circulation through appropriate pruning.",
+            "Choose disease-resistant apple varieties when possible.",
+            "For severe disease, seek local agricultural guidance for appropriate disease-control treatment."
+        ]
+    },
+
+    "Apple___Black_rot": {
+        "title": "🍎 Apple Black Rot",
+        "type": "Fungal disease",
+        "care": [
+            "Remove infected fruit, leaves and dead plant material.",
+            "Prune affected branches where appropriate and keep pruning tools clean.",
+            "Avoid leaving mummified fruit on the tree.",
+            "Maintain good tree health and reduce plant stress.",
+            "Seek local agricultural guidance if the disease is severe."
+        ]
+    },
+
+    "Apple___Cedar_apple_rust": {
+        "title": "🍎 Cedar-Apple Rust",
+        "type": "Fungal disease",
+        "care": [
+            "Remove infected plant material where practical.",
+            "Maintain good airflow around the tree.",
+            "Disease-resistant apple varieties can help reduce problems.",
+            "If practical, manage nearby infected juniper or cedar hosts.",
+            "Severe cases should be evaluated using local agricultural guidance."
+        ]
+    },
+
+    "Apple___healthy": {
+        "title": "🍎 Healthy Apple",
+        "type": "Healthy",
+        "care": [
+            "No disease treatment is indicated by the model.",
+            "Continue regular watering and appropriate nutrition.",
+            "Maintain good airflow around the tree.",
+            "Inspect leaves and fruit regularly for new symptoms."
+        ]
+    },
+
+
+    # --------------------------------------------------------
+    # BLUEBERRY
+    # --------------------------------------------------------
+
+    "Blueberry___healthy": {
+        "title": "🫐 Healthy Blueberry",
+        "type": "Healthy",
+        "care": [
+            "No disease treatment is indicated by the model.",
+            "Continue appropriate watering and nutrition.",
+            "Maintain good airflow around plants.",
+            "Monitor regularly for discoloration, spots or unusual growth."
+        ]
+    },
+
+
+    # --------------------------------------------------------
+    # CHERRY
+    # --------------------------------------------------------
+
+    "Cherry_(including_sour)___Powdery_mildew": {
+        "title": "🍒 Cherry Powdery Mildew",
+        "type": "Fungal disease",
+        "care": [
+            "Remove severely affected plant material where practical.",
+            "Improve airflow by avoiding excessive crowding.",
+            "Avoid excessive humidity around foliage.",
+            "Choose resistant varieties when available.",
+            "For significant infection, seek local agricultural guidance."
+        ]
+    },
+
+    "Cherry_(including_sour)___healthy": {
+        "title": "🍒 Healthy Cherry",
+        "type": "Healthy",
+        "care": [
+            "No disease treatment is indicated by the model.",
+            "Continue normal watering and plant care.",
+            "Maintain good sunlight and airflow.",
+            "Inspect leaves and fruit regularly."
+        ]
+    },
+
+
+    # --------------------------------------------------------
+    # CORN
+    # --------------------------------------------------------
+
+    "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot": {
+        "title": "🌽 Corn Gray Leaf Spot",
+        "type": "Fungal disease",
+        "care": [
+            "Remove heavily infected plant debris where practical.",
+            "Improve field airflow and avoid excessive plant stress.",
+            "Use crop rotation where appropriate.",
+            "Consider disease-resistant varieties for future planting.",
+            "Follow local agricultural recommendations for disease management."
+        ]
+    },
+
+    "Corn_(maize)___Common_rust_": {
+        "title": "🌽 Corn Common Rust",
+        "type": "Fungal disease",
+        "care": [
+            "Monitor plants regularly for increasing rust symptoms.",
+            "Maintain healthy plant growth through appropriate water and nutrition.",
+            "Use resistant varieties when available.",
+            "Avoid unnecessary prolonged leaf wetness.",
+            "For severe crop problems, consult local agricultural guidance."
+        ]
+    },
+
+    "Corn_(maize)___Northern_Leaf_Blight": {
+        "title": "🌽 Corn Northern Leaf Blight",
+        "type": "Fungal disease",
+        "care": [
+            "Remove or properly manage infected crop debris.",
+            "Use crop rotation where appropriate.",
+            "Choose resistant varieties when available.",
+            "Maintain good crop health and avoid unnecessary plant stress.",
+            "Seek local agricultural advice for severe infections."
+        ]
+    },
+
+    "Corn_(maize)___healthy": {
+        "title": "🌽 Healthy Corn",
+        "type": "Healthy",
+        "care": [
+            "No disease treatment is indicated by the model.",
+            "Continue appropriate irrigation and nutrition.",
+            "Monitor leaves regularly for spots or discoloration.",
+            "Maintain good crop management practices."
+        ]
+    },
+
+
+    # --------------------------------------------------------
+    # GRAPE
+    # --------------------------------------------------------
+
+    "Grape___Black_rot": {
+        "title": "🍇 Grape Black Rot",
+        "type": "Fungal disease",
+        "care": [
+            "Remove infected leaves and fruit where practical.",
+            "Remove old infected plant material from around the vines.",
+            "Improve airflow through appropriate vine management.",
+            "Avoid prolonged moisture on foliage.",
+            "Use local agricultural guidance for severe infections."
+        ]
+    },
+
+    "Grape___Esca_(Black_Measles)": {
+        "title": "🍇 Grape Esca / Black Measles",
+        "type": "Grape fungal disease",
+        "care": [
+            "Remove severely affected plant material where appropriate.",
+            "Avoid unnecessary wounds to grapevines.",
+            "Maintain good vineyard sanitation.",
+            "Use healthy planting material for future vines.",
+            "Seek professional vineyard or agricultural advice because symptoms can have multiple causes."
+        ]
+    },
+
+    "Grape___Leaf_blight_(Isariopsis_Leaf_Spot)": {
+        "title": "🍇 Grape Leaf Blight",
+        "type": "Fungal disease",
+        "care": [
+            "Remove severely affected leaves and plant debris.",
+            "Improve airflow around the vines.",
+            "Avoid prolonged leaf wetness where practical.",
+            "Maintain good vineyard sanitation.",
+            "Seek local agricultural guidance for severe disease."
+        ]
+    },
+
+    "Grape___healthy": {
+        "title": "🍇 Healthy Grape",
+        "type": "Healthy",
+        "care": [
+            "No disease treatment is indicated by the model.",
+            "Maintain appropriate watering and nutrition.",
+            "Keep vines properly supported and ventilated.",
+            "Regularly inspect leaves and fruit."
+        ]
+    },
+
+
+    # --------------------------------------------------------
+    # ORANGE
+    # --------------------------------------------------------
+
+    "Orange___Haunglongbing_(Citrus_greening)": {
+        "title": "🍊 Citrus Greening / Huanglongbing",
+        "type": "Bacterial disease",
+        "care": [
+            "There is currently no simple cure that restores an infected tree.",
+            "Remove severely affected trees according to local plant-health guidance when recommended.",
+            "Use certified healthy planting material for new trees.",
+            "Monitor and manage the insect vectors responsible for spreading the disease using approved local guidance.",
+            "Contact a local agricultural or plant-health authority for confirmation and management."
+        ]
+    },
+
+
+    # --------------------------------------------------------
+    # PEACH
+    # --------------------------------------------------------
+
+    "Peach___Bacterial_spot": {
+        "title": "🍑 Peach Bacterial Spot",
+        "type": "Bacterial disease",
+        "care": [
+            "Remove severely affected plant material where practical.",
+            "Avoid unnecessary injury to branches and leaves.",
+            "Maintain good airflow around the tree.",
+            "Use disease-resistant varieties where available.",
+            "Seek local agricultural guidance for severe infections."
+        ]
+    },
+
+    "Peach___healthy": {
+        "title": "🍑 Healthy Peach",
+        "type": "Healthy",
+        "care": [
+            "No disease treatment is indicated by the model.",
+            "Continue normal watering and nutrition.",
+            "Maintain good sunlight and airflow.",
+            "Monitor leaves and fruit regularly."
+        ]
+    },
+
+
+    # --------------------------------------------------------
+    # BELL PEPPER
+    # --------------------------------------------------------
+
+    "Pepper,_bell___Bacterial_spot": {
+        "title": "🫑 Bell Pepper Bacterial Spot",
+        "type": "Bacterial disease",
+        "care": [
+            "Remove severely affected leaves and fruit where practical.",
+            "Avoid working with plants when foliage is wet.",
+            "Use clean planting material and maintain good sanitation.",
+            "Avoid overhead watering when possible.",
+            "Use resistant varieties and local agricultural guidance where available."
+        ]
+    },
+
+    "Pepper,_bell___healthy": {
+        "title": "🫑 Healthy Bell Pepper",
+        "type": "Healthy",
+        "care": [
+            "No disease treatment is indicated by the model.",
+            "Continue appropriate watering and nutrition.",
+            "Keep foliage dry when practical.",
+            "Monitor plants regularly."
+        ]
+    },
+
+
+    # --------------------------------------------------------
+    # POTATO
+    # --------------------------------------------------------
+
+    "Potato___Early_blight": {
+        "title": "🥔 Potato Early Blight",
+        "type": "Fungal disease",
+        "care": [
+            "Remove severely affected foliage where practical.",
+            "Keep infected plant debris under control.",
+            "Water at the base of the plant rather than wetting foliage.",
+            "Improve airflow and avoid overcrowding.",
+            "Use crop rotation and resistant varieties where appropriate."
+        ]
+    },
+
+    "Potato___Late_blight": {
+        "title": "🥔 Potato Late Blight",
+        "type": "Water mold disease",
+        "care": [
+            "Remove severely infected plant material according to local guidance.",
+            "Keep foliage as dry as practical.",
+            "Avoid overhead irrigation where possible.",
+            "Use healthy certified planting material.",
+            "Late blight can spread rapidly, so seek local agricultural guidance promptly if strongly suspected."
+        ]
+    },
+
+    "Potato___healthy": {
+        "title": "🥔 Healthy Potato",
+        "type": "Healthy",
+        "care": [
+            "No disease treatment is indicated by the model.",
+            "Continue appropriate irrigation and nutrition.",
+            "Use healthy planting material.",
+            "Practice crop rotation where appropriate.",
+            "Monitor the crop regularly."
+        ]
+    },
+
+
+    # --------------------------------------------------------
+    # RASPBERRY
+    # --------------------------------------------------------
+
+    "Raspberry___healthy": {
+        "title": "🫐 Healthy Raspberry",
+        "type": "Healthy",
+        "care": [
+            "No disease treatment is indicated by the model.",
+            "Maintain good airflow around plants.",
+            "Provide appropriate water and nutrition.",
+            "Remove dead plant material as part of normal maintenance.",
+            "Inspect plants regularly for disease symptoms."
+        ]
+    },
+
+
+    # --------------------------------------------------------
+    # SOYBEAN
+    # --------------------------------------------------------
+
+    "Soybean___healthy": {
+        "title": "🌱 Healthy Soybean",
+        "type": "Healthy",
+        "care": [
+            "No disease treatment is indicated by the model.",
+            "Maintain appropriate soil moisture and nutrition.",
+            "Monitor the crop regularly.",
+            "Use good crop-management and sanitation practices."
+        ]
+    },
+
+
+    # --------------------------------------------------------
+    # SQUASH
+    # --------------------------------------------------------
+
+    "Squash___Powdery_mildew": {
+        "title": "🎃 Squash Powdery Mildew",
+        "type": "Fungal disease",
+        "care": [
+            "Remove severely affected leaves where practical.",
+            "Improve airflow around plants.",
+            "Avoid excessive crowding.",
+            "Water at the soil level rather than unnecessarily wetting foliage.",
+            "Choose resistant varieties when available."
+        ]
+    },
+
+
+    # --------------------------------------------------------
+    # STRAWBERRY
+    # --------------------------------------------------------
+
+    "Strawberry___Leaf_scorch": {
+        "title": "🍓 Strawberry Leaf Scorch",
+        "type": "Fungal disease",
+        "care": [
+            "Remove severely affected leaves and plant debris.",
+            "Improve airflow around strawberry plants.",
+            "Avoid excessive leaf wetness.",
+            "Maintain appropriate irrigation and plant nutrition.",
+            "Use healthy planting material and monitor new growth."
+        ]
+    },
+
+    "Strawberry___healthy": {
+        "title": "🍓 Healthy Strawberry",
+        "type": "Healthy",
+        "care": [
+            "No disease treatment is indicated by the model.",
+            "Continue appropriate watering and nutrition.",
+            "Maintain good airflow around plants.",
+            "Remove dead leaves as part of normal plant care."
+        ]
+    },
+
+
+    # --------------------------------------------------------
+    # TOMATO
+    # --------------------------------------------------------
+
+    "Tomato___Bacterial_spot": {
+        "title": "🍅 Tomato Bacterial Spot",
+        "type": "Bacterial disease",
+        "care": [
+            "Remove severely affected leaves where practical.",
+            "Avoid handling plants while foliage is wet.",
+            "Water at the base of plants rather than overhead.",
+            "Use clean seed and planting material.",
+            "Improve airflow and avoid unnecessary leaf wetness."
+        ]
+    },
+
+    "Tomato___Early_blight": {
+        "title": "🍅 Tomato Early Blight",
+        "type": "Fungal disease",
+        "care": [
+            "Remove affected leaves where practical.",
+            "Mulch around plants to reduce soil splash onto leaves.",
+            "Water at the base of the plant.",
+            "Improve airflow through spacing and appropriate support.",
+            "Use crop rotation and disease-resistant varieties where available."
+        ]
+    },
+
+    "Tomato___Late_blight": {
+        "title": "🍅 Tomato Late Blight",
+        "type": "Water mold disease",
+        "care": [
+            "Remove severely infected plant material according to local guidance.",
+            "Keep leaves as dry as possible.",
+            "Avoid overhead watering.",
+            "Improve airflow around plants.",
+            "Because late blight can spread rapidly, seek local agricultural guidance if suspected."
+        ]
+    },
+
+    "Tomato___Leaf_Mold": {
+        "title": "🍅 Tomato Leaf Mold",
+        "type": "Fungal disease",
+        "care": [
+            "Remove severely affected leaves where practical.",
+            "Increase ventilation and airflow around plants.",
+            "Reduce prolonged humidity around foliage.",
+            "Avoid unnecessary overhead watering.",
+            "Use resistant varieties where available."
+        ]
+    },
+
+    "Tomato___Septoria_leaf_spot": {
+        "title": "🍅 Tomato Septoria Leaf Spot",
+        "type": "Fungal disease",
+        "care": [
+            "Remove affected lower leaves where practical.",
+            "Keep foliage dry by watering at the plant base.",
+            "Use mulch to reduce soil splash.",
+            "Improve spacing and airflow.",
+            "Do not save seed from severely infected plants."
+        ]
+    },
+
+    "Tomato___Spider_mites Two-spotted_spider_mite": {
+        "title": "🍅 Tomato Two-Spotted Spider Mite",
+        "type": "Pest",
+        "care": [
+            "Inspect the undersides of leaves carefully.",
+            "Remove severely affected leaves where practical.",
+            "Keep plants appropriately watered because plant stress can worsen mite problems.",
+            "Encourage natural predators where appropriate.",
+            "For serious infestations, seek local agricultural guidance for suitable pest-management options."
+        ]
+    },
+
+    "Tomato___Target_Spot": {
+        "title": "🍅 Tomato Target Spot",
+        "type": "Fungal disease",
+        "care": [
+            "Remove severely affected leaves where practical.",
+            "Improve airflow around plants.",
+            "Avoid prolonged leaf wetness.",
+            "Water at the base of the plant.",
+            "Use healthy planting material and follow local disease-management guidance."
+        ]
+    },
+
+    "Tomato___Tomato_Yellow_Leaf_Curl_Virus": {
+        "title": "🍅 Tomato Yellow Leaf Curl Virus",
+        "type": "Viral disease",
+        "care": [
+            "There is no direct cure that eliminates the virus from an infected plant.",
+            "Remove severely infected plants according to local agricultural guidance.",
+            "Control the insect vectors that spread the virus using approved local methods.",
+            "Use healthy, certified planting material.",
+            "Use resistant tomato varieties when available."
+        ]
+    },
+
+    "Tomato___Tomato_mosaic_virus": {
+        "title": "🍅 Tomato Mosaic Virus",
+        "type": "Viral disease",
+        "care": [
+            "There is no direct cure for an infected plant.",
+            "Remove severely infected plants to reduce possible spread.",
+            "Wash hands after handling suspected infected plants.",
+            "Clean and sanitize tools used around infected plants.",
+            "Use healthy seed and planting material."
+        ]
+    },
+
+    "Tomato___healthy": {
+        "title": "🍅 Healthy Tomato",
+        "type": "Healthy",
+        "care": [
+            "No disease treatment is indicated by the model.",
+            "Continue appropriate watering and nutrition.",
+            "Maintain good airflow around the plant.",
+            "Monitor leaves and fruit regularly."
+        ]
+    }
+}
+    # ====================================================
+    # STATUS
+    # ====================================================
+
+    if "healthy" in best_class.lower():
+
+        st.success(
+            "🟢 HEALTH STATUS: The model predicts that "
+            "this plant appears healthy."
+        )
+
+    else:
+
+        st.warning(
+            "🔴 HEALTH STATUS: A possible plant disease "
+            "has been detected."
+        )
+
+
+    # ====================================================
+    # RECOMMENDED CARE
+    # ====================================================
+
+    st.markdown("---")
+
+    st.subheader("🌿 Recommended Care")
+
+    if confidence >= 60 and best_class in CARE_GUIDE:
+
+        care_info = CARE_GUIDE[best_class]
+
+        st.markdown(
+            f"### {care_info['title']}"
+        )
+
+        st.caption(
+            f"Category: {care_info['type']}"
+        )
+
+        for item in care_info["care"]:
+
+            st.markdown(
+                f"• {item}"
             )
 
-        else:
+    else:
 
-            st.warning(
-                "🔴 HEALTH STATUS: A possible plant disease "
-                "has been detected."
-            )
+        st.warning(
+            "⚠️ The model is not sufficiently confident "
+            "to provide disease-specific care advice. "
+            "Try uploading a clearer image."
+        )
 
+    st.caption(
+        "Educational guidance only. AI predictions are not "
+        "a professional agricultural diagnosis."
+    )
+# ====================================================
+# TOP PREDICTIONS
+# ====================================================
         # ====================================================
         # TOP PREDICTIONS
         # ====================================================
