@@ -661,24 +661,74 @@ with col3:
     """, unsafe_allow_html=True)
 
 # ============================================================
-# UPLOAD
+# IMAGE INPUT
 # ============================================================
 
 st.markdown("""
-<div class="glass">
-
 <div class="section-title">
-📡 Upload Biological Sample
+📸 ADD PLANT IMAGE
+</div>
+
+<div class="section-subtitle">
+Choose how you want to provide the leaf image.
 </div>
 """, unsafe_allow_html=True)
 
-uploaded_file = st.file_uploader(
-    "Drop your leaf image here",
-    type=["jpg", "jpeg", "png"],
-    help="Use a clear image of a plant leaf."
-)
+tab1, tab2, tab3 = st.tabs([
+    "📁 UPLOAD",
+    "📷 CAMERA",
+    "📋 PASTE"
+])
 
-st.markdown("</div>", unsafe_allow_html=True)
+uploaded_file = None
+
+# ------------------------------------------------------------
+# TAB 1 — UPLOAD
+# ------------------------------------------------------------
+
+with tab1:
+
+    uploaded_file = st.file_uploader(
+        "Choose a leaf image",
+        type=["jpg", "jpeg", "png"],
+        help="Upload a clear photograph of a plant leaf."
+    )
+
+
+# ------------------------------------------------------------
+# TAB 2 — CAMERA
+# ------------------------------------------------------------
+
+with tab2:
+
+    camera_image = st.camera_input(
+        "📷 Take a picture of the plant leaf"
+    )
+
+    if camera_image is not None:
+        uploaded_file = camera_image
+
+
+# ------------------------------------------------------------
+# TAB 3 — PASTE
+# ------------------------------------------------------------
+
+with tab3:
+
+    st.markdown("""
+    **📋 Paste an image from your clipboard**
+
+    Take a screenshot or copy an image and press:
+
+    **CTRL + V**
+
+    Then paste it below.
+    """)
+
+    pasted_image = st.text_input(
+        "Paste image file path if needed",
+        placeholder="Paste image here..."
+    )
 
 # ============================================================
 # IMAGE + ANALYSIS
