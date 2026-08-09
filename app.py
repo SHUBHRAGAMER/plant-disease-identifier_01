@@ -1419,7 +1419,7 @@ CARE_GUIDE = {
         ]
     }
 }
-    # ====================================================
+       # ====================================================
     # STATUS
     # ====================================================
 
@@ -1444,37 +1444,114 @@ CARE_GUIDE = {
 
     st.markdown("---")
 
-    st.subheader("🌿 Recommended Care")
+    st.markdown(
+        """
+        <div class="section-title">
+        🌿 RECOMMENDED CARE
+        </div>
 
-    if confidence >= 60 and best_class in CARE_GUIDE:
+        <div class="section-subtitle">
+        AI-generated care guidance based on the detected condition
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
-        care_info = CARE_GUIDE[best_class]
 
-        st.markdown(
-            f"### {care_info['title']}"
-        )
+    # ----------------------------------------------------
+    # CHECK CONFIDENCE
+    # ----------------------------------------------------
 
-        st.caption(
-            f"Category: {care_info['type']}"
-        )
+    if confidence >= 60:
 
-        for item in care_info["care"]:
+        if best_class in CARE_GUIDE:
+
+            care_info = CARE_GUIDE[best_class]
+
+
+            # ------------------------------------------------
+            # DISEASE INFORMATION
+            # ------------------------------------------------
 
             st.markdown(
-                f"• {item}"
+                f"""
+                <div class="glass">
+
+                <h2>
+                {care_info["title"]}
+                </h2>
+
+                <p>
+                <strong>Category:</strong>
+                {care_info["type"]}
+                </p>
+
+                </div>
+                """,
+                unsafe_allow_html=True
             )
+
+
+            # ------------------------------------------------
+            # CARE RECOMMENDATIONS
+            # ------------------------------------------------
+
+            st.markdown("### 🩺 Recommended Actions")
+
+            for item in care_info["care"]:
+
+                st.markdown(
+                    f"""
+                    <div class="info-row">
+                    <span class="info-value">
+                    🌱 {item}
+                    </span>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+
+
+        else:
+
+            st.info(
+                "ℹ️ Care information for this condition "
+                "has not been added to the database yet."
+            )
+
 
     else:
 
         st.warning(
-            "⚠️ The model is not sufficiently confident "
-            "to provide disease-specific care advice. "
-            "Try uploading a clearer image."
+            "⚠️ The model confidence is below 60%. "
+            "A reliable disease-specific recommendation "
+            "cannot be provided."
         )
 
-    st.caption(
-        "Educational guidance only. AI predictions are not "
-        "a professional agricultural diagnosis."
+        st.info(
+            "💡 Try uploading a clearer photograph of the "
+            "plant leaf with good lighting."
+        )
+
+
+    # ----------------------------------------------------
+    # DISCLAIMER
+    # ----------------------------------------------------
+
+    st.markdown(
+        """
+        <div class="glass">
+
+        ⚠️ <strong>IMPORTANT</strong><br><br>
+
+        PlantCare AI provides educational guidance based on
+        an AI image classification model. It is not a
+        professional agricultural diagnosis and should not
+        be treated as a guaranteed cure.
+
+        </div>
+        """,
+        unsafe_allow_html=True
     )
 # ====================================================
 # TOP PREDICTIONS
