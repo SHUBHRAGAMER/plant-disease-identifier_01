@@ -26,264 +26,406 @@ st.markdown(
     """
     <style>
 
-    /* ---------- GLOBAL ---------- */
+    /* ==============================
+       GLOBAL
+    ============================== */
 
     .stApp {
         background:
-            radial-gradient(circle at 15% 10%, rgba(0,255,170,0.08), transparent 25%),
-            radial-gradient(circle at 85% 20%, rgba(0,150,255,0.08), transparent 25%),
-            linear-gradient(135deg, #030807 0%, #06110e 45%, #020505 100%);
-        color: #e8fff7;
+            radial-gradient(
+                circle at 20% 10%,
+                rgba(20, 255, 170, 0.08),
+                transparent 30%
+            ),
+            radial-gradient(
+                circle at 80% 20%,
+                rgba(0, 180, 255, 0.07),
+                transparent 30%
+            ),
+            linear-gradient(
+                135deg,
+                #050807 0%,
+                #07110d 45%,
+                #020403 100%
+            );
+
+        color: #eafff5;
     }
 
-    .block-container {
-        max-width: 1050px;
+    .main .block-container {
+        max-width: 1000px;
         padding-top: 2rem;
         padding-bottom: 4rem;
     }
 
-    /* ---------- TEXT ---------- */
+    /* ==============================
+       REMOVE STREAMLIT UI
+    ============================== */
 
-    h1, h2, h3, p, label {
-        color: #e8fff7 !important;
+    #MainMenu {
+        visibility: hidden;
     }
 
-    /* ---------- HERO ---------- */
+    footer {
+        visibility: hidden;
+    }
+
+    header {
+        visibility: hidden;
+    }
+
+    /* ==============================
+       HERO
+    ============================== */
 
     .hero {
         text-align: center;
         padding: 45px 20px 35px 20px;
-        border: 1px solid rgba(0,255,180,0.18);
         border-radius: 28px;
+
         background:
             linear-gradient(
                 145deg,
-                rgba(8,30,25,0.92),
-                rgba(3,12,10,0.75)
+                rgba(12, 35, 27, 0.95),
+                rgba(4, 15, 11, 0.92)
             );
+
+        border: 1px solid rgba(55, 220, 167, 0.25);
+
         box-shadow:
-            0 0 60px rgba(0,255,170,0.06),
-            inset 0 0 40px rgba(0,255,170,0.025);
-        margin-bottom: 28px;
+            0 0 50px rgba(30, 220, 150, 0.08),
+            inset 0 0 40px rgba(30, 220, 150, 0.025);
+
+        margin-bottom: 25px;
     }
 
     .hero-icon {
-        font-size: 65px;
-        margin-bottom: 8px;
-        filter: drop-shadow(0 0 18px rgba(0,255,170,0.5));
+        font-size: 55px;
+        margin-bottom: 10px;
+
+        filter:
+            drop-shadow(
+                0 0 18px rgba(53, 220, 167, 0.65)
+            );
     }
 
     .hero-title {
         font-size: 48px;
         font-weight: 900;
-        letter-spacing: 6px;
-        color: #dffff4;
-        text-shadow: 0 0 25px rgba(0,255,170,0.35);
+        letter-spacing: 5px;
+
+        background:
+            linear-gradient(
+                90deg,
+                #35dca7,
+                #8affd2,
+                #35dca7
+            );
+
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+
+        text-shadow:
+            0 0 30px rgba(53, 220, 167, 0.18);
     }
 
     .hero-subtitle {
-        margin-top: 8px;
-        font-size: 15px;
+        color: #91b9aa;
         letter-spacing: 5px;
-        color: #61e8bd;
+        font-size: 13px;
+        margin-top: 8px;
     }
 
-    /* ---------- SECTION ---------- */
+    /* ==============================
+       SECTION
+    ============================== */
 
     .section-title {
-        font-size: 24px;
+        color: #62e9bb;
+        font-size: 21px;
         font-weight: 800;
         letter-spacing: 2px;
-        margin-top: 28px;
-        color: #baffea;
+        margin-top: 20px;
     }
 
     .section-subtitle {
-        color: #86aaa1;
-        margin-top: 6px;
-        margin-bottom: 20px;
-        font-size: 15px;
+        color: #8ca99e;
+        font-size: 14px;
+        line-height: 1.7;
+        margin-top: 7px;
     }
 
-    /* ---------- GLASS ---------- */
+    /* ==============================
+       GLASS CARDS
+    ============================== */
 
     .glass {
-        background: rgba(8,24,20,0.72);
-        border: 1px solid rgba(0,255,180,0.15);
+        background:
+            linear-gradient(
+                145deg,
+                rgba(15, 34, 27, 0.85),
+                rgba(4, 14, 10, 0.85)
+            );
+
+        border:
+            1px solid rgba(53, 220, 167, 0.18);
+
         border-radius: 20px;
-        padding: 24px;
-        margin: 12px 0;
+
+        padding: 25px;
+
+        margin: 18px 0;
+
         box-shadow:
-            0 10px 35px rgba(0,0,0,0.25),
-            inset 0 0 25px rgba(0,255,180,0.025);
+            0 12px 45px rgba(0, 0, 0, 0.25),
+            inset 0 0 30px rgba(53, 220, 167, 0.025);
     }
 
-    /* ---------- STATS ---------- */
+    /* ==============================
+       STATS
+    ============================== */
 
     .stat-card {
         text-align: center;
-        padding: 22px 10px;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(13, 35, 27, 0.9),
+                rgba(4, 14, 10, 0.9)
+            );
+
+        border:
+            1px solid rgba(53, 220, 167, 0.16);
+
         border-radius: 18px;
-        background: linear-gradient(
-            145deg,
-            rgba(10,35,29,0.9),
-            rgba(4,16,13,0.9)
-        );
-        border: 1px solid rgba(0,255,180,0.13);
-        box-shadow: 0 0 25px rgba(0,255,170,0.04);
+
+        padding: 22px 10px;
+
+        box-shadow:
+            0 10px 30px rgba(0,0,0,0.2);
     }
 
-    .stat-card h2 {
-        margin: 0;
-        font-size: 32px;
-        color: #68f2c3 !important;
+    .stat-value {
+        font-size: 30px;
+        font-weight: 900;
+        color: #55e7b5;
     }
 
-    .stat-card p {
-        margin: 5px 0 0 0;
+    .stat-label {
         font-size: 11px;
+        color: #76988d;
         letter-spacing: 2px;
-        color: #779b92 !important;
+        margin-top: 5px;
     }
 
-    /* ---------- UPLOAD ---------- */
+    /* ==============================
+       UPLOAD
+    ============================== */
 
     [data-testid="stFileUploader"] {
-        background: rgba(4,18,15,0.65);
-        border: 1px dashed rgba(0,255,180,0.3);
+        background:
+            rgba(8, 22, 16, 0.8);
+
+        border:
+            1px dashed rgba(53, 220, 167, 0.45);
+
         border-radius: 18px;
-        padding: 12px;
+
+        padding: 10px;
     }
 
-    /* ---------- BUTTON ---------- */
+    [data-testid="stFileUploader"]:hover {
+        border-color: #35dca7;
+
+        box-shadow:
+            0 0 25px rgba(53, 220, 167, 0.08);
+    }
+
+    /* ==============================
+       BUTTON
+    ============================== */
 
     .stButton > button {
-        border-radius: 14px;
-        min-height: 52px;
-        font-weight: 800;
+        border-radius: 14px !important;
+
+        border:
+            1px solid rgba(53, 220, 167, 0.4) !important;
+
+        background:
+            linear-gradient(
+                90deg,
+                #0d6b51,
+                #15906b
+            ) !important;
+
+        color: white !important;
+
+        font-weight: 800 !important;
+
         letter-spacing: 1px;
-        border: 1px solid rgba(0,255,180,0.3);
-        background: linear-gradient(
-            135deg,
-            #063d2d,
-            #08734f
-        );
-        color: white;
-        box-shadow: 0 0 25px rgba(0,255,170,0.1);
-        transition: 0.2s ease;
+
+        min-height: 50px;
+
+        box-shadow:
+            0 0 25px rgba(53, 220, 167, 0.12);
     }
 
     .stButton > button:hover {
-        border-color: #54f5c0;
-        box-shadow: 0 0 30px rgba(0,255,170,0.25);
-        transform: translateY(-1px);
+        border-color: #63efbf !important;
+
+        box-shadow:
+            0 0 30px rgba(53, 220, 167, 0.25);
     }
 
-    /* ---------- RESULT ---------- */
+    /* ==============================
+       RESULT
+    ============================== */
 
     .result {
-        margin-top: 28px;
-        padding: 32px;
+        margin-top: 25px;
+
+        padding: 30px;
+
         border-radius: 24px;
+
         text-align: center;
+
         background:
             radial-gradient(
                 circle at center,
-                rgba(0,255,170,0.12),
-                transparent 65%
-            ),
-            rgba(5,25,20,0.9);
-        border: 1px solid rgba(0,255,180,0.28);
+                rgba(27, 112, 82, 0.35),
+                rgba(5, 17, 12, 0.95)
+            );
+
+        border:
+            1px solid rgba(53, 220, 167, 0.4);
+
         box-shadow:
-            0 0 45px rgba(0,255,170,0.08),
-            inset 0 0 30px rgba(0,255,170,0.025);
+            0 0 50px rgba(53, 220, 167, 0.1);
     }
 
     .result-label {
-        color: #62eabd;
-        font-size: 12px;
+        color: #6eeec2;
+        font-size: 11px;
         letter-spacing: 3px;
-        font-weight: 700;
+        font-weight: 800;
     }
 
     .result-name {
-        margin-top: 15px;
-        font-size: 30px;
+        font-size: 27px;
         font-weight: 900;
-        color: white;
+        margin-top: 14px;
+        color: #effff8;
     }
 
     .result-confidence {
         margin-top: 12px;
-        font-size: 22px;
+        color: #54e8b5;
+        font-size: 18px;
         font-weight: 800;
-        color: #69f5c5;
     }
 
-    /* ---------- SCANNER ---------- */
+    /* ==============================
+       SCANNING
+    ============================== */
 
     .scanning {
         text-align: center;
-        padding: 28px;
+
+        padding: 30px;
+
+        margin: 20px 0;
+
         border-radius: 18px;
-        border: 1px solid rgba(0,255,180,0.25);
-        background: rgba(0,30,22,0.8);
-        color: #69f5c5;
+
+        background:
+            rgba(5, 25, 17, 0.9);
+
+        border:
+            1px solid rgba(53, 220, 167, 0.3);
+
+        color: #62e9bb;
+
         font-weight: 800;
+
         letter-spacing: 2px;
-        box-shadow: 0 0 30px rgba(0,255,170,0.08);
     }
 
     .scan-line {
         height: 2px;
+
         width: 100%;
-        background: #55efbc;
-        box-shadow: 0 0 15px #55efbc;
+
+        background:
+            linear-gradient(
+                90deg,
+                transparent,
+                #35dca7,
+                transparent
+            );
+
+        box-shadow:
+            0 0 15px #35dca7;
+
+        animation: scan 1s infinite;
     }
 
-    /* ---------- CARE ---------- */
+    @keyframes scan {
+        0% {
+            opacity: 0.2;
+            transform: scaleX(0.4);
+        }
 
-    .care-box {
-        background: linear-gradient(
-            145deg,
-            rgba(8,35,28,0.9),
-            rgba(3,17,14,0.9)
-        );
-        border: 1px solid rgba(0,255,180,0.2);
-        border-radius: 22px;
-        padding: 28px;
-        margin-top: 15px;
+        50% {
+            opacity: 1;
+            transform: scaleX(1);
+        }
+
+        100% {
+            opacity: 0.2;
+            transform: scaleX(0.4);
+        }
     }
 
-    .care-title {
-        font-size: 25px;
-        font-weight: 900;
-        color: #8ff8d3;
+    /* ==============================
+       INFO ROW
+    ============================== */
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+
+        padding: 13px 0;
+
+        border-bottom:
+            1px solid rgba(255,255,255,0.05);
     }
 
-    .care-type {
-        color: #72988f;
-        margin-top: 5px;
-        margin-bottom: 18px;
+    .info-name {
+        color: #76988d;
     }
 
-    .care-item {
-        padding: 12px 14px;
-        margin: 8px 0;
-        border-radius: 12px;
-        background: rgba(0,255,170,0.035);
-        border-left: 3px solid #36dca7;
-        color: #d8eee8;
+    .info-value {
+        color: #d9fff0;
+        font-weight: 700;
     }
 
-    /* ---------- FOOTER ---------- */
+    /* ==============================
+       FOOTER
+    ============================== */
 
     .footer {
         text-align: center;
-        margin-top: 55px;
-        padding: 28px;
-        color: #5d8278;
+
+        margin-top: 60px;
+
+        padding: 30px;
+
+        color: #628176;
+
         font-size: 12px;
+
         letter-spacing: 2px;
     }
 
@@ -299,18 +441,33 @@ st.markdown(
 
 @st.cache_resource
 def load_model():
+
     return tf.keras.models.load_model(
         "plant_disease_model.keras"
     )
 
 
+# ============================================================
+# LOAD CLASS NAMES
+# ============================================================
+
 @st.cache_data
 def load_classes():
-    with open("class_names.json", "r") as f:
+
+    with open(
+        "class_names.json",
+        "r"
+    ) as f:
+
         return json.load(f)
 
 
+# ============================================================
+# LOAD AI
+# ============================================================
+
 model = load_model()
+
 class_names = load_classes()
 
 
@@ -324,11 +481,11 @@ CARE_GUIDE = {
         "title": "🍎 Apple Scab",
         "type": "Fungal disease",
         "care": [
-            "Remove affected leaves and fallen infected debris where practical.",
-            "Improve airflow through appropriate pruning.",
+            "Remove heavily infected leaves and fallen plant debris.",
             "Keep the area around the tree clean.",
-            "Use disease-resistant varieties when available.",
-            "For severe cases, seek local agricultural guidance."
+            "Improve air circulation through appropriate pruning.",
+            "Choose disease-resistant apple varieties when possible.",
+            "Seek local agricultural guidance for severe disease."
         ]
     },
 
@@ -340,7 +497,7 @@ CARE_GUIDE = {
             "Prune affected branches where appropriate.",
             "Keep pruning tools clean.",
             "Remove mummified fruit from the tree.",
-            "Seek local agricultural guidance for severe disease."
+            "Seek local agricultural guidance if severe."
         ]
     },
 
@@ -350,8 +507,8 @@ CARE_GUIDE = {
         "care": [
             "Remove infected plant material where practical.",
             "Maintain good airflow around the tree.",
-            "Use resistant varieties when available.",
-            "Manage nearby cedar or juniper hosts where appropriate.",
+            "Use resistant apple varieties when available.",
+            "Manage nearby cedar or juniper hosts where practical.",
             "Seek local agricultural guidance for severe cases."
         ]
     },
@@ -361,9 +518,9 @@ CARE_GUIDE = {
         "type": "Healthy",
         "care": [
             "No disease treatment is indicated by the model.",
-            "Continue appropriate watering and nutrition.",
-            "Maintain good airflow.",
-            "Monitor leaves and fruit regularly."
+            "Continue regular watering and appropriate nutrition.",
+            "Maintain good airflow around the tree.",
+            "Inspect leaves and fruit regularly."
         ]
     },
 
@@ -373,8 +530,8 @@ CARE_GUIDE = {
         "care": [
             "No disease treatment is indicated by the model.",
             "Continue appropriate watering and nutrition.",
-            "Maintain good airflow.",
-            "Monitor plants regularly."
+            "Maintain good airflow around plants.",
+            "Monitor regularly for unusual growth or discoloration."
         ]
     },
 
@@ -385,7 +542,7 @@ CARE_GUIDE = {
             "Remove severely affected plant material where practical.",
             "Improve airflow around the plant.",
             "Avoid excessive humidity around foliage.",
-            "Avoid overcrowding.",
+            "Choose resistant varieties when available.",
             "Seek local agricultural guidance for significant infection."
         ]
     },
@@ -395,8 +552,8 @@ CARE_GUIDE = {
         "type": "Healthy",
         "care": [
             "No disease treatment is indicated by the model.",
-            "Continue normal watering and nutrition.",
-            "Maintain sunlight and airflow.",
+            "Continue normal watering and plant care.",
+            "Maintain good sunlight and airflow.",
             "Inspect leaves and fruit regularly."
         ]
     },
@@ -405,10 +562,10 @@ CARE_GUIDE = {
         "title": "🌽 Corn Gray Leaf Spot",
         "type": "Fungal disease",
         "care": [
-            "Manage infected crop debris appropriately.",
-            "Use crop rotation where practical.",
-            "Choose resistant varieties when available.",
-            "Maintain good crop health.",
+            "Manage infected crop debris where practical.",
+            "Maintain good crop airflow.",
+            "Use crop rotation where appropriate.",
+            "Consider resistant varieties.",
             "Follow local agricultural recommendations."
         ]
     },
@@ -417,11 +574,11 @@ CARE_GUIDE = {
         "title": "🌽 Corn Common Rust",
         "type": "Fungal disease",
         "care": [
-            "Monitor the crop regularly.",
-            "Maintain appropriate water and nutrition.",
+            "Monitor plants regularly.",
+            "Maintain healthy plant growth.",
             "Use resistant varieties when available.",
             "Avoid unnecessary prolonged leaf wetness.",
-            "Seek agricultural guidance for severe problems."
+            "Seek agricultural guidance for severe crop problems."
         ]
     },
 
@@ -433,7 +590,7 @@ CARE_GUIDE = {
             "Use crop rotation where appropriate.",
             "Choose resistant varieties.",
             "Maintain good crop health.",
-            "Seek local agricultural guidance for severe infection."
+            "Seek agricultural advice for severe infection."
         ]
     },
 
@@ -444,7 +601,7 @@ CARE_GUIDE = {
             "No disease treatment is indicated by the model.",
             "Continue appropriate irrigation and nutrition.",
             "Monitor leaves regularly.",
-            "Maintain good crop-management practices."
+            "Maintain good crop management."
         ]
     },
 
@@ -453,10 +610,10 @@ CARE_GUIDE = {
         "type": "Fungal disease",
         "care": [
             "Remove infected leaves and fruit where practical.",
-            "Remove infected plant debris.",
-            "Improve airflow through appropriate vine management.",
+            "Remove old infected plant material.",
+            "Improve airflow around vines.",
             "Avoid prolonged moisture on foliage.",
-            "Seek agricultural guidance for severe infection."
+            "Seek local agricultural guidance for severe infections."
         ]
     },
 
@@ -465,10 +622,10 @@ CARE_GUIDE = {
         "type": "Grape fungal disease",
         "care": [
             "Remove severely affected plant material where appropriate.",
-            "Avoid unnecessary wounds to vines.",
+            "Avoid unnecessary wounds to grapevines.",
             "Maintain vineyard sanitation.",
             "Use healthy planting material.",
-            "Seek professional agricultural advice."
+            "Seek professional vineyard advice."
         ]
     },
 
@@ -476,10 +633,10 @@ CARE_GUIDE = {
         "title": "🍇 Grape Leaf Blight",
         "type": "Fungal disease",
         "care": [
-            "Remove severely affected leaves.",
-            "Remove infected plant debris.",
+            "Remove severely affected leaves and debris.",
             "Improve airflow around vines.",
             "Avoid prolonged leaf wetness.",
+            "Maintain vineyard sanitation.",
             "Seek agricultural guidance for severe disease."
         ]
     },
@@ -490,8 +647,8 @@ CARE_GUIDE = {
         "care": [
             "No disease treatment is indicated by the model.",
             "Maintain appropriate watering and nutrition.",
-            "Keep vines properly supported and ventilated.",
-            "Inspect leaves and fruit regularly."
+            "Keep vines supported and ventilated.",
+            "Regularly inspect leaves and fruit."
         ]
     },
 
@@ -500,10 +657,10 @@ CARE_GUIDE = {
         "type": "Bacterial disease",
         "care": [
             "There is no simple cure that restores an infected tree.",
+            "Follow local plant-health guidance regarding severely affected trees.",
             "Use certified healthy planting material.",
             "Monitor and manage insect vectors using approved local guidance.",
-            "Follow local plant-health recommendations.",
-            "Contact an agricultural or plant-health authority for confirmation."
+            "Contact a local agricultural or plant-health authority."
         ]
     },
 
@@ -513,9 +670,9 @@ CARE_GUIDE = {
         "care": [
             "Remove severely affected plant material where practical.",
             "Avoid unnecessary injury to branches and leaves.",
-            "Maintain good airflow.",
+            "Maintain good airflow around the tree.",
             "Use resistant varieties where available.",
-            "Seek local agricultural guidance for severe infections."
+            "Seek agricultural guidance for severe infection."
         ]
     },
 
@@ -534,10 +691,10 @@ CARE_GUIDE = {
         "title": "🫑 Bell Pepper Bacterial Spot",
         "type": "Bacterial disease",
         "care": [
-            "Remove severely affected leaves and fruit where practical.",
-            "Avoid handling plants while foliage is wet.",
+            "Remove severely affected leaves and fruit.",
+            "Avoid working with plants while foliage is wet.",
             "Use clean planting material.",
-            "Avoid overhead watering when possible.",
+            "Avoid overhead watering where possible.",
             "Use resistant varieties when available."
         ]
     },
@@ -569,11 +726,11 @@ CARE_GUIDE = {
         "title": "🥔 Potato Late Blight",
         "type": "Water mold disease",
         "care": [
-            "Remove severely infected plant material according to local guidance.",
+            "Remove severely infected material according to local guidance.",
             "Keep foliage as dry as practical.",
-            "Avoid overhead irrigation where possible.",
+            "Avoid overhead irrigation.",
             "Use healthy certified planting material.",
-            "Seek agricultural guidance promptly because late blight can spread rapidly."
+            "Seek agricultural guidance promptly if strongly suspected."
         ]
     },
 
@@ -596,7 +753,7 @@ CARE_GUIDE = {
             "No disease treatment is indicated by the model.",
             "Maintain good airflow.",
             "Provide appropriate water and nutrition.",
-            "Remove dead plant material during normal maintenance.",
+            "Remove dead plant material normally.",
             "Inspect plants regularly."
         ]
     },
@@ -643,7 +800,7 @@ CARE_GUIDE = {
             "No disease treatment is indicated by the model.",
             "Continue appropriate watering and nutrition.",
             "Maintain good airflow.",
-            "Remove dead leaves as normal maintenance."
+            "Remove dead leaves during normal maintenance."
         ]
     },
 
@@ -653,9 +810,9 @@ CARE_GUIDE = {
         "care": [
             "Remove severely affected leaves where practical.",
             "Avoid handling plants while foliage is wet.",
-            "Water at the plant base.",
+            "Water at the base of plants.",
             "Use clean seed and planting material.",
-            "Improve airflow around plants."
+            "Improve airflow and avoid unnecessary leaf wetness."
         ]
     },
 
@@ -675,11 +832,11 @@ CARE_GUIDE = {
         "title": "🍅 Tomato Late Blight",
         "type": "Water mold disease",
         "care": [
-            "Remove severely infected plant material according to local guidance.",
+            "Remove severely infected material according to local guidance.",
             "Keep leaves as dry as possible.",
             "Avoid overhead watering.",
-            "Improve airflow.",
-            "Seek agricultural guidance promptly if suspected."
+            "Improve airflow around plants.",
+            "Seek agricultural guidance because late blight can spread rapidly."
         ]
     },
 
@@ -703,7 +860,7 @@ CARE_GUIDE = {
             "Water at the plant base.",
             "Use mulch to reduce soil splash.",
             "Improve spacing and airflow.",
-            "Use healthy planting material."
+            "Avoid saving seed from severely infected plants."
         ]
     },
 
@@ -711,11 +868,11 @@ CARE_GUIDE = {
         "title": "🍅 Tomato Two-Spotted Spider Mite",
         "type": "Pest",
         "care": [
-            "Inspect the undersides of leaves.",
+            "Inspect the undersides of leaves carefully.",
             "Remove severely affected leaves where practical.",
             "Keep plants appropriately watered.",
             "Encourage natural predators where appropriate.",
-            "Seek agricultural guidance for serious infestations."
+            "Seek local agricultural guidance for serious infestations."
         ]
     },
 
@@ -724,7 +881,7 @@ CARE_GUIDE = {
         "type": "Fungal disease",
         "care": [
             "Remove severely affected leaves where practical.",
-            "Improve airflow.",
+            "Improve airflow around plants.",
             "Avoid prolonged leaf wetness.",
             "Water at the base of the plant.",
             "Use healthy planting material."
@@ -736,10 +893,10 @@ CARE_GUIDE = {
         "type": "Viral disease",
         "care": [
             "There is no direct cure that eliminates the virus.",
-            "Remove severely infected plants according to local guidance.",
-            "Manage insect vectors using approved local methods.",
+            "Follow local agricultural guidance for severely infected plants.",
+            "Control insect vectors using approved local methods.",
             "Use healthy certified planting material.",
-            "Use resistant tomato varieties where available."
+            "Use resistant tomato varieties when available."
         ]
     },
 
@@ -748,9 +905,9 @@ CARE_GUIDE = {
         "type": "Viral disease",
         "care": [
             "There is no direct cure for an infected plant.",
-            "Remove severely infected plants to reduce possible spread.",
-            "Clean and sanitize tools used around infected plants.",
+            "Remove severely infected plants according to local guidance.",
             "Wash hands after handling suspected infected plants.",
+            "Clean and sanitize tools.",
             "Use healthy seed and planting material."
         ]
     },
@@ -761,7 +918,7 @@ CARE_GUIDE = {
         "care": [
             "No disease treatment is indicated by the model.",
             "Continue appropriate watering and nutrition.",
-            "Maintain good airflow.",
+            "Maintain good airflow around the plant.",
             "Monitor leaves and fruit regularly."
         ]
     }
@@ -798,13 +955,17 @@ st.markdown(
 
 st.markdown(
     """
-    <div class="section-title">
-        🌱 INTELLIGENT PLANT DIAGNOSTICS
-    </div>
+    <div class="glass">
 
-    <div class="section-subtitle">
-        Upload a photograph of a plant leaf and let the
-        deep-learning model analyze its visual patterns.
+        <div class="section-title">
+            🌱 INTELLIGENT PLANT DIAGNOSTICS
+        </div>
+
+        <div class="section-subtitle">
+            Upload a photograph of a plant leaf and let the
+            deep-learning model analyze its visual patterns.
+        </div>
+
     </div>
     """,
     unsafe_allow_html=True
@@ -818,33 +979,36 @@ st.markdown(
 col1, col2, col3 = st.columns(3)
 
 with col1:
+
     st.markdown(
         """
         <div class="stat-card">
-            <h2>38</h2>
-            <p>DISEASE CLASSES</p>
+            <div class="stat-value">38</div>
+            <div class="stat-label">DISEASE CLASSES</div>
         </div>
         """,
         unsafe_allow_html=True
     )
 
 with col2:
+
     st.markdown(
         """
         <div class="stat-card">
-            <h2>70K+</h2>
-            <p>TRAINING IMAGES</p>
+            <div class="stat-value">70K+</div>
+            <div class="stat-label">TRAINING IMAGES</div>
         </div>
         """,
         unsafe_allow_html=True
     )
 
 with col3:
+
     st.markdown(
         """
         <div class="stat-card">
-            <h2>AI</h2>
-            <p>DEEP LEARNING</p>
+            <div class="stat-value">AI</div>
+            <div class="stat-label">DEEP LEARNING</div>
         </div>
         """,
         unsafe_allow_html=True
@@ -852,23 +1016,31 @@ with col3:
 
 
 # ============================================================
-# INPUT SECTION
+# INPUT HEADER
 # ============================================================
 
 st.markdown(
     """
-    <div class="section-title">
-        📡 PLANT SPECIMEN INPUT
-    </div>
+    <div class="glass">
 
-    <div class="section-subtitle">
-        Upload an existing image or capture a new image
-        directly using your device camera.
+        <div class="section-title">
+            📡 PLANT SPECIMEN INPUT
+        </div>
+
+        <div class="section-subtitle">
+            Upload an existing image or capture a new image
+            directly using your device camera.
+        </div>
+
     </div>
     """,
     unsafe_allow_html=True
 )
 
+
+# ============================================================
+# INPUT TABS
+# ============================================================
 
 upload_tab, camera_tab = st.tabs(
     [
@@ -889,10 +1061,13 @@ with upload_tab:
     st.markdown(
         """
         <div class="glass">
+
             <h3>📁 Upload from your device</h3>
+
             <p>
                 Select a clear photograph of the plant leaf.
             </p>
+
         </div>
         """,
         unsafe_allow_html=True
@@ -900,13 +1075,22 @@ with upload_tab:
 
     file_upload = st.file_uploader(
         "Choose an image",
-        type=["jpg", "jpeg", "png"],
+        type=[
+            "jpg",
+            "jpeg",
+            "png"
+        ],
         help="Supported formats: JPG, JPEG and PNG",
         label_visibility="collapsed"
     )
 
     if file_upload is not None:
+
         uploaded_file = file_upload
+
+        st.success(
+            "✅ Image successfully loaded!"
+        )
 
 
 # ============================================================
@@ -918,11 +1102,13 @@ with camera_tab:
     st.markdown(
         """
         <div class="glass">
+
             <h3>📷 Take a photo</h3>
+
             <p>
-                Allow camera access and photograph the plant leaf
-                directly.
+                Allow camera access and photograph the plant leaf directly.
             </p>
+
         </div>
         """,
         unsafe_allow_html=True
@@ -933,11 +1119,16 @@ with camera_tab:
     )
 
     if camera_image is not None:
+
         uploaded_file = camera_image
+
+        st.success(
+            "📸 Photo captured successfully!"
+        )
 
 
 # ============================================================
-# IMAGE ANALYSIS
+# ANALYSIS
 # ============================================================
 
 if uploaded_file is not None:
@@ -947,12 +1138,7 @@ if uploaded_file is not None:
     ).convert("RGB")
 
     st.markdown(
-        """
-        <div class="section-title">
-            🔬 SPECIMEN PREVIEW
-        </div>
-        """,
-        unsafe_allow_html=True
+        "### 🔬 SPECIMEN PREVIEW"
     )
 
     st.image(
@@ -961,14 +1147,8 @@ if uploaded_file is not None:
         use_container_width=True
     )
 
-    st.markdown(
-        """
-        <div class="glass">
-            🌿 <strong>Specimen ready.</strong><br>
-            The image can now be analyzed by the neural network.
-        </div>
-        """,
-        unsafe_allow_html=True
+    st.success(
+        "🌿 Ready for neural analysis."
     )
 
     st.write("")
@@ -982,7 +1162,7 @@ if uploaded_file is not None:
     if analyze:
 
         # ====================================================
-        # SCANNING ANIMATION
+        # SCANNING
         # ====================================================
 
         scan_placeholder = st.empty()
@@ -1014,8 +1194,9 @@ if uploaded_file is not None:
 
             time.sleep(0.35)
 
+
         # ====================================================
-        # PREPROCESS IMAGE
+        # PREPROCESS
         # ====================================================
 
         resized = image.resize(
@@ -1031,8 +1212,9 @@ if uploaded_file is not None:
             axis=0
         )
 
+
         # ====================================================
-        # MODEL PREDICTION
+        # PREDICTION
         # ====================================================
 
         predictions = model.predict(
@@ -1040,27 +1222,33 @@ if uploaded_file is not None:
             verbose=0
         )[0]
 
+
+        # ====================================================
+        # TOP 5
+        # ====================================================
+
         top_indices = np.argsort(
             predictions
         )[-5:][::-1]
 
-        scan_placeholder.empty()
 
         # ====================================================
-        # BEST PREDICTION
+        # BEST RESULT
         # ====================================================
 
-        best_index = int(
-            top_indices[0]
-        )
+        best_index = top_indices[0]
 
         best_class = class_names[
             best_index
         ]
 
-        confidence = float(
+        confidence = (
             predictions[best_index] * 100
         )
+
+
+        scan_placeholder.empty()
+
 
         # ====================================================
         # RESULT
@@ -1087,6 +1275,7 @@ if uploaded_file is not None:
             unsafe_allow_html=True
         )
 
+
         # ====================================================
         # HEALTH STATUS
         # ====================================================
@@ -1094,20 +1283,23 @@ if uploaded_file is not None:
         if "healthy" in best_class.lower():
 
             st.success(
-                "🟢 HEALTH STATUS: The model predicts that "
-                "this plant appears healthy."
+                "🟢 HEALTH STATUS: The model predicts "
+                "that this plant appears healthy."
             )
 
         else:
 
             st.warning(
-                "🔴 HEALTH STATUS: A possible plant disease "
-                "has been detected."
+                "🔴 HEALTH STATUS: A possible plant "
+                "disease has been detected."
             )
+
 
         # ====================================================
         # RECOMMENDED CARE
         # ====================================================
+
+        st.markdown("---")
 
         st.markdown(
             """
@@ -1116,16 +1308,14 @@ if uploaded_file is not None:
             </div>
 
             <div class="section-subtitle">
-                AI-assisted care guidance based on the detected condition
+                AI-assisted care guidance based on the detected condition.
             </div>
             """,
             unsafe_allow_html=True
         )
 
-        if (
-            confidence >= 60
-            and best_class in CARE_GUIDE
-        ):
+
+        if confidence >= 60 and best_class in CARE_GUIDE:
 
             care_info = CARE_GUIDE[
                 best_class
@@ -1133,15 +1323,16 @@ if uploaded_file is not None:
 
             st.markdown(
                 f"""
-                <div class="care-box">
+                <div class="glass">
 
-                    <div class="care-title">
+                    <h2>
                         {care_info["title"]}
-                    </div>
+                    </h2>
 
-                    <div class="care-type">
-                        Category: {care_info["type"]}
-                    </div>
+                    <p>
+                        <strong>Category:</strong>
+                        {care_info["type"]}
+                    </p>
 
                 </div>
                 """,
@@ -1156,8 +1347,12 @@ if uploaded_file is not None:
 
                 st.markdown(
                     f"""
-                    <div class="care-item">
-                        🌱 {item}
+                    <div class="info-row">
+
+                        <span class="info-value">
+                            🌱 {item}
+                        </span>
+
                     </div>
                     """,
                     unsafe_allow_html=True
@@ -1167,58 +1362,60 @@ if uploaded_file is not None:
 
             st.warning(
                 "⚠️ The model confidence is below 60%. "
-                "Disease-specific care guidance is not being "
-                "shown because the prediction may be unreliable."
+                "Disease-specific care guidance may not be reliable."
             )
 
             st.info(
-                "💡 Try uploading a clearer photograph of "
-                "the plant leaf with good lighting."
+                "💡 Try uploading a clearer photograph "
+                "with good lighting and the leaf clearly visible."
             )
 
         else:
 
             st.info(
-                "ℹ️ Care information for this condition "
-                "is not available in the current guide."
+                "ℹ️ Care information for this detected "
+                "condition is not currently available."
             )
 
-        st.caption(
-            "Educational guidance only. PlantCare AI is not "
-            "a professional agricultural diagnosis."
-        )
 
         # ====================================================
         # TOP PREDICTIONS
         # ====================================================
 
+        st.markdown("---")
+
         st.markdown(
             """
-            <div class="section-title">
-                📊 NEURAL PROBABILITY MATRIX
-            </div>
+            <div class="glass">
 
-            <div class="section-subtitle">
-                Top five classifications generated by the model
+                <div class="section-title">
+                    📊 NEURAL PROBABILITY MATRIX
+                </div>
+
+                <div class="section-subtitle">
+                    Top classifications generated by the neural network.
+                </div>
+
             </div>
             """,
             unsafe_allow_html=True
         )
+
 
         for rank, index in enumerate(
             top_indices
         ):
 
             disease = class_names[
-                int(index)
+                index
             ]
 
-            probability = float(
+            probability = (
                 predictions[index] * 100
             )
 
-            st.markdown(
-                f"**#{rank + 1}  {disease}**"
+            st.write(
+                f"**#{rank + 1} — {disease}**"
             )
 
             st.progress(
@@ -1232,9 +1429,44 @@ if uploaded_file is not None:
             )
 
 
+        # ====================================================
+        # DISCLAIMER
+        # ====================================================
+
+        st.markdown(
+            """
+            <div class="glass">
+
+                ⚠️ <strong>IMPORTANT</strong>
+
+                <br><br>
+
+                PlantCare AI provides educational guidance
+                based on an AI image-classification model.
+
+                <br><br>
+
+                It is not a professional agricultural diagnosis
+                and should not be treated as a guaranteed cure.
+
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+
+else:
+
+    st.info(
+        "🌱 Upload an image or use your camera to begin."
+    )
+
+
 # ============================================================
-# INFORMATION
+# SYSTEM INFORMATION
 # ============================================================
+
+st.markdown("---")
 
 st.markdown(
     """
@@ -1246,38 +1478,51 @@ st.markdown(
 )
 
 
+# ============================================================
+# HOW AI WORKS
+# ============================================================
+
 with st.expander(
     "🧠 HOW THE AI WORKS"
 ):
 
     st.markdown(
         """
-        **1. Image Input**
+        **01 — Image Input**
 
-        The uploaded plant image is received by the application.
+        The uploaded plant image is received by PlantCare AI.
 
-        **2. Image Preprocessing**
+        **02 — Image Preprocessing**
 
-        The image is resized to 224 × 224 pixels.
+        The image is converted to RGB and resized to
+        **224 × 224 pixels**.
 
-        **3. Feature Analysis**
+        **03 — Feature Extraction**
 
-        The neural network analyzes visual patterns in the leaf.
+        The neural network analyzes visual patterns
+        contained in the image.
 
-        **4. Classification**
+        **04 — Classification**
 
-        The model compares the image against 38 learned classes.
+        The model compares the image against its
+        **38 learned classes**.
 
-        **5. Probability Analysis**
+        **05 — Probability Analysis**
 
-        The model calculates a probability for each class.
+        The neural network produces probabilities
+        for the possible classes.
 
-        **6. Final Prediction**
+        **06 — Final Prediction**
 
-        The class with the highest probability is displayed.
+        The class with the highest probability is
+        presented as the primary prediction.
         """
     )
 
+
+# ============================================================
+# BETTER RESULTS
+# ============================================================
 
 with st.expander(
     "🎯 GET BETTER RESULTS"
@@ -1291,14 +1536,21 @@ with st.expander(
 
         • Avoid extreme blur.
 
-        • Keep the main leaf visible.
+        • Keep the main leaf clearly visible.
 
         • Avoid images containing many overlapping leaves.
 
-        • Try to photograph the affected leaf closely.
+        • Try to photograph the leaf against a simple background.
+
+        • Make sure the leaf occupies a reasonable portion
+          of the image.
         """
     )
 
+
+# ============================================================
+# IMPORTANT
+# ============================================================
 
 with st.expander(
     "⚠️ IMPORTANT"
@@ -1308,12 +1560,11 @@ with st.expander(
         """
         PlantCare AI is an educational AI demonstration.
 
-        Its predictions are generated by an image-classification
-        model and should not be treated as a guaranteed professional
-        agricultural diagnosis.
+        Predictions are generated from an image-classification
+        model and may be incorrect.
 
-        If a plant appears seriously affected, consult an appropriate
-        agricultural professional or local plant-health authority.
+        The result should not replace professional agricultural
+        diagnosis or expert advice.
         """
     )
 
