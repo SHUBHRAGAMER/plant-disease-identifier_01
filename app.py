@@ -1529,27 +1529,27 @@ st.markdown(
             # CARE RECOMMENDATIONS
             # ------------------------------------------------
 
-            st.markdown("### 🩺 Recommended Actions")
+st.markdown("### 🩺 Recommended Actions")
 
-            for item in care_info["care"]:
+for item in care_info["care"]:
 
-                st.markdown(
-                    f"""
-                    <div class="info-row">
-                    <span class="info-value">
-                    🌱 {item}
-                    </span>
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
+    st.markdown(
+    f"""
+    <div class="info-row">
+    <span class="info-value">
+    🌱 {item}
+    </span>
+    </div>
+    """,
+    unsafe_allow_html=True
+        )
 
 
-        else:
+else:
 
-            st.info(
-                "ℹ️ Care information for this condition "
-                "has not been added to the database yet."
+    st.info(
+    "ℹ️ Care information for this condition "
+    "has not been added to the database yet."
             )
 
 
