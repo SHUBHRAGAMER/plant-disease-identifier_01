@@ -3,75 +3,198 @@ import tensorflow as tf
 import numpy as np
 import json
 import time
+import re
 from PIL import Image
 
 # ============================================================
-# PAGE CONFIG
+# CONFIG
 # ============================================================
 
 st.set_page_config(
     page_title="PlantCare AI",
     page_icon="🌿",
-    layout="centered",
+    layout="wide",
     initial_sidebar_state="collapsed"
 )
 
 # ============================================================
-# LOAD MODEL
+# MODEL
 # ============================================================
 
-@st.cache_resource
+@st.cache_resource(show_spinner=False)
 def load_model():
-    return tf.keras.models.load_model(
-        "plant_disease_model.keras"
-    )
+    return tf.keras.models.load_model("plant_disease_model.keras")
 
 
-@st.cache_data
-def load_classes():
+@st.cache_data(show_spinner=False)
+def load_class_names():
+
     with open("class_names.json", "r") as f:
-        return json.load(f)
+        data = json.load(f)
+
+    # Supports either:
+    # ["Apple___Apple_scab", ...]
+    # or
+    # {"0": "Apple___Apple_scab", ...}
+
+    if isinstance(data, list):
+        return data
+
+    if isinstance(data, dict):
+        try:
+            return [data[str(i)] for i in range(len(data))]
+        except:
+            return list(data.values())
+
+    return data
 
 
 model = load_model()
-class_names = load_classes()
+class_names = load_class_names()
 
 # ============================================================
-# FUTURISTIC DARK UI
+# HELPERS
 # ============================================================
 
-st.markdown("""
+def pretty_name(name):
+
+    name = str(name)
+
+    name = name.replace("___", " • ")
+    name = name.replace("_", " ")
+    name = name.replace(",", ", ")
+
+    return name
+
+
+def plant_name(name):
+
+    name = str(name)
+
+    if "___" in name:
+        plant = name.split("___")[0]
+    else:
+        plant = name.split(" ")[0]
+
+    plant = plant.replace("_", " ")
+
+    return plant
+
+
+def disease_name(name):
+
+    name = str(name)
+
+    if "___" in name:
+        disease = name.split("___", 1)[1]
+    else:
+        disease = name
+
+    disease = disease.replace("_", " ")
+
+    return disease
+
+
+def is_healthy(name):
+
+    return "healthy" in str(name).lower()
+
+
+def confidence_label(value):
+
+    if value >= 90:
+        return "VERY HIGH"
+
+    if value >= 75:
+        return "HIGH"
+
+    if value >= 50:
+        return "MODERATE"
+
+    return "LOW"
+
+
+# ============================================================
+# FUTURISTIC CSS
+# ============================================================
+
+st.markdown(
+    """
 <style>
 
 /* =========================================================
-   GLOBAL
+   CORE
    ========================================================= */
 
-.stApp {
-    background:
-        radial-gradient(circle at 10% 10%, rgba(0,255,140,0.10), transparent 25%),
-        radial-gradient(circle at 90% 20%, rgba(0,255,200,0.08), transparent 25%),
-        radial-gradient(circle at 50% 100%, rgba(0,255,100,0.07), transparent 30%),
-        #050807;
-
-    color: #e8fff1;
+html, body, [class*="css"] {
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
 }
 
-.block-container {
-    max-width: 900px;
-    padding-top: 1.5rem;
-    padding-bottom: 4rem;
+.stApp {
+
+    background:
+        radial-gradient(
+            circle at 15% 15%,
+            rgba(0,255,140,0.09),
+            transparent 25%
+        ),
+        radial-gradient(
+            circle at 85% 10%,
+            rgba(0,220,255,0.07),
+            transparent 25%
+        ),
+        radial-gradient(
+            circle at 50% 90%,
+            rgba(0,255,120,0.06),
+            transparent 30%
+        ),
+        #030706;
+
+    color: #eafff1;
+
+    overflow-x: hidden;
 }
 
 /* =========================================================
-   REMOVE DEFAULT STREAMLIT UI
+   GRID
+   ========================================================= */
+
+.stApp::before {
+
+    content: "";
+
+    position: fixed;
+
+    inset: 0;
+
+    background-image:
+        linear-gradient(
+            rgba(0,255,140,0.018) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(0,255,140,0.018) 1px,
+            transparent 1px
+        );
+
+    background-size: 42px 42px;
+
+    pointer-events: none;
+
+    z-index: 0;
+}
+
+/* =========================================================
+   REMOVE STREAMLIT
    ========================================================= */
 
 #MainMenu {
-    visibility: hidden;
-}
-
-footer {
     visibility: hidden;
 }
 
@@ -79,30 +202,123 @@ header {
     visibility: hidden;
 }
 
+footer {
+    visibility: hidden;
+}
+
+.block-container {
+
+    max-width: 1250px;
+
+    padding-top: 25px;
+
+    padding-bottom: 80px;
+
+    position: relative;
+
+    z-index: 2;
+}
+
 /* =========================================================
-   ANIMATED BACKGROUND
+   TOP NAV
    ========================================================= */
 
-.stApp::before {
-    content: "";
-    position: fixed;
-    inset: 0;
+.navbar {
 
-    background-image:
-        linear-gradient(rgba(0,255,130,0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,255,130,0.025) 1px, transparent 1px);
+    display: flex;
 
-    background-size: 45px 45px;
+    justify-content: space-between;
 
-    mask-image: linear-gradient(
-        to bottom,
-        transparent,
-        black 20%,
-        black 80%,
-        transparent
-    );
+    align-items: center;
 
-    pointer-events: none;
+    padding: 12px 18px;
+
+    border:
+
+        1px solid
+        rgba(120,255,170,0.10);
+
+    border-radius: 18px;
+
+    background:
+        rgba(4,12,8,0.72);
+
+    backdrop-filter: blur(20px);
+
+    margin-bottom: 45px;
+
+}
+
+.brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+}
+
+.brand-icon {
+
+    width: 36px;
+
+    height: 36px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    border-radius: 10px;
+
+    background:
+
+        radial-gradient(
+            circle,
+            rgba(0,255,130,0.30),
+            rgba(0,255,130,0.05)
+        );
+
+    border: 1px solid rgba(0,255,130,0.35);
+
+    font-size: 20px;
+
+}
+
+.online {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color: #75d99a;
+
+    font-size: 11px;
+
+    letter-spacing: 2px;
+
+}
+
+.online-dot {
+
+    width: 7px;
+
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #00ff88;
+
+    box-shadow: 0 0 12px #00ff88;
+
 }
 
 /* =========================================================
@@ -110,83 +326,108 @@ header {
    ========================================================= */
 
 .hero {
+
     text-align: center;
-    padding: 35px 10px 30px;
+
+    padding: 20px 0 45px;
+
 }
 
-.logo-orb {
-    width: 92px;
-    height: 92px;
+.hero-orb {
+
+    width: 115px;
+
+    height: 115px;
 
     margin: auto;
 
-    border-radius: 50%;
-
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 
-    font-size: 48px;
+    border-radius: 50%;
+
+    font-size: 58px;
 
     background:
+
         radial-gradient(
             circle,
-            rgba(0,255,130,0.25),
-            rgba(0,255,130,0.03) 65%,
-            transparent
+            rgba(0,255,140,0.20),
+            rgba(0,255,140,0.025) 65%,
+            transparent 70%
         );
 
-    border: 1px solid rgba(0,255,130,0.45);
+    border:
+
+        1px solid
+        rgba(0,255,140,0.38);
 
     box-shadow:
-        0 0 20px rgba(0,255,130,0.25),
-        0 0 70px rgba(0,255,130,0.10),
-        inset 0 0 30px rgba(0,255,130,0.10);
 
-    animation: pulse 3s infinite;
+        0 0 35px
+        rgba(0,255,140,0.18),
+
+        0 0 110px
+        rgba(0,255,140,0.08),
+
+        inset 0 0 30px
+        rgba(0,255,140,0.10);
+
+    animation:
+        floatOrb 4s ease-in-out infinite;
+
 }
 
-@keyframes pulse {
+@keyframes floatOrb {
 
     0%,100% {
-        box-shadow:
-        0 0 20px rgba(0,255,130,0.25),
-        0 0 70px rgba(0,255,130,0.10);
+        transform: translateY(0px);
     }
 
     50% {
-        box-shadow:
-        0 0 35px rgba(0,255,130,0.45),
-        0 0 100px rgba(0,255,130,0.20);
+        transform: translateY(-8px);
     }
+
 }
 
 .hero-title {
 
-    font-size: 52px;
-    font-weight: 900;
+    margin-top: 25px;
 
-    margin-top: 20px;
+    font-size: clamp(42px, 6vw, 76px);
 
-    background: linear-gradient(
-        90deg,
-        #ffffff,
-        #70ffb0,
-        #00ff88,
-        #ffffff
-    );
+    line-height: 1;
 
-    background-size: 300%;
+    font-weight: 950;
+
+    letter-spacing: -4px;
+
+    background:
+
+        linear-gradient(
+            100deg,
+            #ffffff,
+            #a6ffc9,
+            #00ff88,
+            #73eaff,
+            #ffffff
+        );
+
+    background-size: 300% 100%;
 
     -webkit-background-clip: text;
+
     -webkit-text-fill-color: transparent;
 
-    animation: gradientMove 6s infinite linear;
+    animation:
+        gradientShift 7s linear infinite;
 
-    letter-spacing: -2px;
 }
 
-@keyframes gradientMove {
+@keyframes gradientShift {
 
     0% {
         background-position: 0%;
@@ -195,102 +436,205 @@ header {
     100% {
         background-position: 300%;
     }
+
 }
 
 .hero-subtitle {
 
-    color: #7ea88d;
+    margin-top: 18px;
 
-    font-size: 16px;
-
-    letter-spacing: 4px;
-
-    text-transform: uppercase;
-
-    margin-top: 8px;
-}
-
-/* =========================================================
-   STATUS BAR
-   ========================================================= */
-
-.status {
-
-    display: flex;
-
-    justify-content: center;
-
-    gap: 10px;
-
-    margin: 15px auto 30px;
+    color: #719281;
 
     font-size: 12px;
 
-    color: #7d9c88;
+    letter-spacing: 5px;
 
-}
-
-.status-dot {
-
-    width: 8px;
-    height: 8px;
-
-    background: #00ff88;
-
-    border-radius: 50%;
-
-    box-shadow: 0 0 12px #00ff88;
-
-    margin-top: 4px;
+    text-transform: uppercase;
 
 }
 
 /* =========================================================
-   GLASS CARDS
+   STATS
    ========================================================= */
 
-.glass {
+.stats {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 12px;
+
+    margin-bottom: 28px;
+
+}
+
+.stat {
+
+    position: relative;
+
+    overflow: hidden;
+
+    padding: 22px;
+
+    border-radius: 18px;
 
     background:
         linear-gradient(
             145deg,
-            rgba(255,255,255,0.055),
-            rgba(255,255,255,0.015)
+            rgba(255,255,255,0.045),
+            rgba(255,255,255,0.012)
         );
 
-    border: 1px solid rgba(100,255,160,0.15);
+    border:
+        1px solid
+        rgba(130,255,180,0.10);
 
-    border-radius: 24px;
+}
 
-    padding: 28px;
+.stat::after {
 
-    margin: 18px 0;
+    content: "";
 
-    backdrop-filter: blur(20px);
+    position: absolute;
 
-    box-shadow:
-        0 20px 70px rgba(0,0,0,0.35),
-        inset 0 1px 0 rgba(255,255,255,0.04);
+    width: 80px;
+
+    height: 80px;
+
+    right: -30px;
+
+    bottom: -30px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(0,255,130,0.08);
+
+    filter: blur(15px);
+
+}
+
+.stat-number {
+
+    font-size: 25px;
+
+    font-weight: 900;
+
+    color: #b9ffd1;
+
+}
+
+.stat-label {
+
+    margin-top: 5px;
+
+    color: #5d7768;
+
+    font-size: 9px;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
 
 }
 
 /* =========================================================
-   SECTION TITLE
+   MAIN GRID
    ========================================================= */
 
-.section-title {
+.main-grid {
 
-    color: #8affb6;
+    display: grid;
 
-    font-size: 13px;
+    grid-template-columns:
+        1.1fr
+        0.9fr;
+
+    gap: 18px;
+
+}
+
+/* =========================================================
+   PANELS
+   ========================================================= */
+
+.panel {
+
+    background:
+
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,0.055),
+            rgba(255,255,255,0.012)
+        );
+
+    border:
+
+        1px solid
+        rgba(120,255,170,0.12);
+
+    border-radius: 25px;
+
+    padding: 28px;
+
+    box-shadow:
+
+        0 25px 80px
+        rgba(0,0,0,0.28),
+
+        inset 0 1px 0
+        rgba(255,255,255,0.035);
+
+    backdrop-filter: blur(20px);
+
+}
+
+.panel-title {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 20px;
+
+}
+
+.panel-title-main {
+
+    font-size: 12px;
 
     font-weight: 800;
 
     letter-spacing: 3px;
 
+    color: #8ef7ae;
+
     text-transform: uppercase;
 
-    margin-bottom: 15px;
+}
+
+.panel-tag {
+
+    font-size: 9px;
+
+    padding: 6px 9px;
+
+    border-radius: 20px;
+
+    color: #67e99a;
+
+    background:
+        rgba(0,255,130,0.07);
+
+    border:
+        1px solid
+        rgba(0,255,130,0.16);
+
+    letter-spacing: 1px;
 
 }
 
@@ -300,18 +644,22 @@ header {
 
 [data-testid="stFileUploader"] {
 
+    border:
+
+        1px dashed
+        rgba(0,255,140,0.35);
+
+    border-radius: 20px;
+
+    padding: 20px;
+
     background:
-        linear-gradient(
-            145deg,
-            rgba(0,255,130,0.06),
-            rgba(0,0,0,0.2)
+
+        radial-gradient(
+            circle at center,
+            rgba(0,255,140,0.05),
+            rgba(0,0,0,0.15)
         );
-
-    border: 1px dashed rgba(0,255,130,0.35);
-
-    border-radius: 18px;
-
-    padding: 10px;
 
     transition: 0.3s;
 
@@ -322,7 +670,73 @@ header {
     border-color: #00ff88;
 
     box-shadow:
-        0 0 30px rgba(0,255,130,0.12);
+
+        0 0 35px
+        rgba(0,255,130,0.10);
+
+}
+
+[data-testid="stFileUploader"] section {
+
+    background: transparent !important;
+
+}
+
+/* =========================================================
+   BUTTON
+   ========================================================= */
+
+.stButton > button {
+
+    width: 100%;
+
+    height: 60px;
+
+    border-radius: 16px;
+
+    border:
+
+        1px solid
+        rgba(0,255,140,0.55);
+
+    background:
+
+        linear-gradient(
+            100deg,
+            #062d1c,
+            #087a42,
+            #062d1c
+        );
+
+    background-size: 200% 100%;
+
+    color: #ffffff;
+
+    font-weight: 900;
+
+    letter-spacing: 2px;
+
+    box-shadow:
+
+        0 0 25px
+        rgba(0,255,130,0.10);
+
+    transition: all 0.25s;
+
+}
+
+.stButton > button:hover {
+
+    transform: translateY(-3px);
+
+    background-position: 100%;
+
+    border-color: #00ff88;
+
+    box-shadow:
+
+        0 0 45px
+        rgba(0,255,130,0.28);
 
 }
 
@@ -336,225 +750,356 @@ header {
 
     overflow: hidden;
 
+    border:
+        1px solid
+        rgba(0,255,140,0.15);
+
+    box-shadow:
+
+        0 15px 50px
+        rgba(0,0,0,0.35);
+
 }
 
 /* =========================================================
-   BUTTON
+   SCANNER
    ========================================================= */
 
-.stButton > button {
+.scanner {
 
-    width: 100%;
+    margin-top: 20px;
 
-    height: 58px;
+    padding: 22px;
 
-    border-radius: 16px;
-
-    border: 1px solid rgba(0,255,130,0.5);
+    border-radius: 18px;
 
     background:
-        linear-gradient(
-            90deg,
-            #073d25,
-            #08733f,
-            #073d25
-        );
+        rgba(0,0,0,0.30);
 
-    color: white;
+    border:
+        1px solid
+        rgba(0,255,140,0.12);
 
-    font-size: 15px;
+    font-family: monospace;
 
-    font-weight: 800;
+}
+
+.scanner-status {
+
+    color: #72ffa7;
+
+    font-size: 11px;
 
     letter-spacing: 2px;
 
-    box-shadow:
-        0 0 20px rgba(0,255,130,0.12);
-
-    transition: all 0.25s;
+    margin-bottom: 15px;
 
 }
 
-.stButton > button:hover {
+.scan-track {
 
-    transform: translateY(-2px);
+    width: 100%;
 
-    border-color: #00ff88;
+    height: 3px;
+
+    background: #12251a;
+
+    overflow: hidden;
+
+    border-radius: 10px;
+
+}
+
+.scan-beam {
+
+    width: 35%;
+
+    height: 100%;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            transparent,
+            #00ff88,
+            #b6ffd2,
+            #00ff88,
+            transparent
+        );
 
     box-shadow:
-        0 0 35px rgba(0,255,130,0.35);
+        0 0 15px #00ff88;
+
+    animation:
+        scanBeam 1.2s infinite;
+
+}
+
+@keyframes scanBeam {
+
+    from {
+        transform: translateX(-150%);
+    }
+
+    to {
+        transform: translateX(400%);
+    }
 
 }
 
 /* =========================================================
-   RESULT
+   DIAGNOSIS
    ========================================================= */
 
-.result {
+.diagnosis {
+
+    margin-top: 25px;
 
     text-align: center;
 
     padding: 35px 20px;
 
-    border-radius: 25px;
+    border-radius: 22px;
 
     background:
+
         radial-gradient(
             circle at 50% 0%,
-            rgba(0,255,130,0.15),
-            transparent 60%
+            rgba(0,255,130,0.14),
+            transparent 65%
         ),
 
-        rgba(5,15,9,0.8);
+        rgba(0,12,7,0.65);
 
-    border: 1px solid rgba(0,255,130,0.30);
+    border:
+
+        1px solid
+        rgba(0,255,130,0.22);
 
     box-shadow:
-        0 0 50px rgba(0,255,130,0.08),
-        inset 0 0 40px rgba(0,255,130,0.025);
 
-    margin-top: 25px;
-
-}
-
-.result-label {
-
-    color: #62b87f;
-
-    font-size: 11px;
-
-    font-weight: 800;
-
-    letter-spacing: 4px;
-
-    text-transform: uppercase;
+        inset 0 0 45px
+        rgba(0,255,130,0.025);
 
 }
 
-.result-name {
+.diagnosis-kicker {
 
-    color: #ffffff;
+    color: #54bd79;
 
-    font-size: 30px;
+    font-size: 9px;
 
     font-weight: 900;
 
-    margin-top: 12px;
+    letter-spacing: 4px;
 
 }
 
-.result-confidence {
+.diagnosis-name {
 
-    color: #65ff9f;
+    margin-top: 12px;
 
-    font-size: 22px;
+    color: #ffffff;
 
-    font-weight: 700;
+    font-size: clamp(22px, 3vw, 34px);
+
+    line-height: 1.2;
+
+    font-weight: 950;
+
+}
+
+.diagnosis-confidence {
 
     margin-top: 10px;
 
-}
+    font-size: 30px;
 
-/* =========================================================
-   SCANNING
-   ========================================================= */
+    font-weight: 950;
 
-.scanning {
+    color: #63ffa0;
 
-    text-align: center;
-
-    padding: 25px;
-
-    color: #71ffa4;
-
-    font-family: monospace;
-
-    letter-spacing: 2px;
+    text-shadow:
+        0 0 25px
+        rgba(0,255,130,0.30);
 
 }
 
-.scan-line {
+.confidence-label {
 
-    height: 2px;
+    color: #527563;
 
-    width: 100%;
+    font-size: 9px;
 
-    background: linear-gradient(
-        90deg,
-        transparent,
-        #00ff88,
-        transparent
-    );
-
-    box-shadow: 0 0 15px #00ff88;
-
-    animation: scan 1.5s infinite;
-
-}
-
-@keyframes scan {
-
-    0% {
-        transform: translateX(-100%);
-    }
-
-    100% {
-        transform: translateX(100%);
-    }
+    letter-spacing: 3px;
 
 }
 
 /* =========================================================
-   METRIC CARDS
+   ANALYSIS ROW
    ========================================================= */
 
-.metric {
+.analysis-row {
 
-    background: rgba(255,255,255,0.025);
+    display: flex;
 
-    border: 1px solid rgba(255,255,255,0.07);
+    align-items: center;
 
-    border-radius: 15px;
+    gap: 12px;
 
-    padding: 15px;
-
-    text-align: center;
+    margin: 12px 0;
 
 }
 
-.metric-number {
+.analysis-dot {
 
-    font-size: 20px;
+    width: 8px;
 
-    font-weight: 800;
+    height: 8px;
 
-    color: #75ffad;
+    border-radius: 50%;
+
+    background: #00ff88;
+
+    box-shadow:
+        0 0 10px #00ff88;
 
 }
 
-.metric-label {
+.analysis-text {
 
-    color: #6f8b78;
+    color: #829e8c;
 
     font-size: 11px;
 
-    text-transform: uppercase;
+}
 
-    letter-spacing: 1px;
+/* =========================================================
+   PREDICTION BARS
+   ========================================================= */
+
+.prediction {
+
+    margin: 17px 0;
+
+}
+
+.prediction-head {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    font-size: 11px;
+
+    color: #a4b9aa;
+
+}
+
+.prediction-value {
+
+    color: #65fca0;
+
+    font-weight: 800;
+
+}
+
+.bar {
+
+    height: 5px;
+
+    margin-top: 8px;
+
+    border-radius: 10px;
+
+    background: #102018;
+
+    overflow: hidden;
+
+}
+
+.bar-fill {
+
+    height: 100%;
+
+    border-radius: 10px;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            #00a85c,
+            #00ff88,
+            #8affa9
+        );
+
+    box-shadow:
+        0 0 12px
+        rgba(0,255,130,0.25);
 
 }
 
 /* =========================================================
-   EXPANDERS
+   INFO CARDS
    ========================================================= */
 
-[data-testid="stExpander"] {
+.info-grid {
 
-    background: rgba(255,255,255,0.02);
+    display: grid;
 
-    border: 1px solid rgba(100,255,160,0.10);
+    grid-template-columns:
+        repeat(3,1fr);
 
-    border-radius: 16px;
+    gap: 12px;
+
+    margin-top: 18px;
+
+}
+
+.info-card {
+
+    padding: 20px;
+
+    border-radius: 18px;
+
+    background:
+        rgba(255,255,255,0.025);
+
+    border:
+        1px solid
+        rgba(255,255,255,0.06);
+
+}
+
+.info-icon {
+
+    font-size: 20px;
+
+}
+
+.info-title {
+
+    margin-top: 12px;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    color: #b8d6c1;
+
+}
+
+.info-text {
+
+    margin-top: 6px;
+
+    color: #5c7564;
+
+    font-size: 10px;
+
+    line-height: 1.6;
 
 }
 
@@ -566,365 +1111,710 @@ header {
 
     text-align: center;
 
-    color: #496353;
+    margin-top: 60px;
 
-    font-size: 12px;
+    color: #3e5948;
 
-    margin-top: 50px;
+    font-size: 9px;
 
-    letter-spacing: 1px;
+    letter-spacing: 3px;
+
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 850px) {
+
+    .main-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .stats {
+
+        grid-template-columns:
+            repeat(2,1fr);
+
+    }
+
+}
+
+@media (max-width: 550px) {
+
+    .hero-title {
+
+        letter-spacing: -2px;
+
+    }
+
+    .stats {
+
+        grid-template-columns: 1fr 1fr;
+
+    }
+
+    .info-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .navbar {
+
+        margin-bottom: 25px;
+
+    }
 
 }
 
 </style>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True
+)
+
+# ============================================================
+# NAVBAR
+# ============================================================
+
+st.markdown(
+    """
+<div class="navbar">
+
+    <div class="brand">
+
+        <div class="brand-icon">
+            🌿
+        </div>
+
+        <div>
+            PLANTCARE <span style="color:#00ff88;">AI</span>
+        </div>
+
+    </div>
+
+    <div class="online">
+
+        <div class="online-dot"></div>
+
+        SYSTEM ONLINE
+
+    </div>
+
+</div>
+""",
+    unsafe_allow_html=True
+)
 
 # ============================================================
 # HERO
 # ============================================================
 
-st.markdown("""
+st.markdown(
+    """
 <div class="hero">
 
-<div class="logo-orb">
-🌿
-</div>
-
-<div class="hero-title">
-PlantCare AI
-</div>
-
-<div class="hero-subtitle">
-Neural Plant Intelligence
-</div>
-
-<div class="status">
-<div class="status-dot"></div>
-AI SYSTEM ONLINE
-</div>
-
-</div>
-""", unsafe_allow_html=True)
-
-# ============================================================
-# INTRO CARD
-# ============================================================
-
-st.markdown("""
-<div class="glass">
-
-<div class="section-title">
-🌐 Plant Intelligence System
-</div>
-
-<div style="color:#9ab5a2; line-height:1.8;">
-
-Upload a photograph of a plant leaf.
-<br>
-
-Our deep-learning model will analyze its visual patterns
-and identify the most likely plant health condition.
-
-</div>
-
-</div>
-""", unsafe_allow_html=True)
-
-# ============================================================
-# MODEL STATS
-# ============================================================
-
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    st.markdown("""
-    <div class="metric">
-    <div class="metric-number">38</div>
-    <div class="metric-label">Classes</div>
+    <div class="hero-orb">
+        🌱
     </div>
-    """, unsafe_allow_html=True)
 
-with col2:
-    st.markdown("""
-    <div class="metric">
-    <div class="metric-number">70K+</div>
-    <div class="metric-label">Training Images</div>
+    <div class="hero-title">
+        PlantCare AI
     </div>
-    """, unsafe_allow_html=True)
 
-with col3:
-    st.markdown("""
-    <div class="metric">
-    <div class="metric-number">AI</div>
-    <div class="metric-label">Deep Learning</div>
+    <div class="hero-subtitle">
+        Neural Plant Health Intelligence
     </div>
-    """, unsafe_allow_html=True)
 
-# ============================================================
-# UPLOAD
-# ============================================================
-
-st.markdown("""
-<div class="glass">
-
-<div class="section-title">
-📡 Upload Biological Sample
 </div>
-""", unsafe_allow_html=True)
-
-uploaded_file = st.file_uploader(
-    "Drop your leaf image here",
-    type=["jpg", "jpeg", "png"],
-    help="Use a clear image of a plant leaf."
+""",
+    unsafe_allow_html=True
 )
 
-st.markdown("</div>", unsafe_allow_html=True)
-
 # ============================================================
-# IMAGE + ANALYSIS
+# STATS
 # ============================================================
 
-if uploaded_file is not None:
+st.markdown(
+    """
+<div class="stats">
 
-    image = Image.open(uploaded_file).convert("RGB")
+    <div class="stat">
+        <div class="stat-number">38</div>
+        <div class="stat-label">Disease Classes</div>
+    </div>
 
-    st.image(
-        image,
-        caption="SPECIMEN LOADED",
-        use_container_width=True
+    <div class="stat">
+        <div class="stat-number">70K+</div>
+        <div class="stat-label">Training Images</div>
+    </div>
+
+    <div class="stat">
+        <div class="stat-number">AI</div>
+        <div class="stat-label">Vision Engine</div>
+    </div>
+
+    <div class="stat">
+        <div class="stat-number">LIVE</div>
+        <div class="stat-label">Neural Analysis</div>
+    </div>
+
+</div>
+""",
+    unsafe_allow_html=True
+)
+
+# ============================================================
+# MAIN LAYOUT
+# ============================================================
+
+left, right = st.columns(
+    [1.08, 0.92],
+    gap="large"
+)
+
+# ============================================================
+# LEFT — SCANNER
+# ============================================================
+
+with left:
+
+    st.markdown(
+        """
+        <div class="panel">
+
+            <div class="panel-title">
+
+                <div class="panel-title-main">
+                    ◉ Biological Scanner
+                </div>
+
+                <div class="panel-tag">
+                    INPUT
+                </div>
+
+            </div>
+
+            <div style="
+                color:#647e6d;
+                font-size:11px;
+                line-height:1.7;
+                margin-bottom:18px;
+            ">
+
+                Upload a clear photograph of a plant leaf.
+                The neural vision engine will analyze its
+                visual characteristics and classify its
+                most probable condition.
+
+            </div>
+        """,
+        unsafe_allow_html=True
     )
 
-    st.write("")
+    uploaded_file = st.file_uploader(
+        "Drop specimen image",
+        type=["jpg", "jpeg", "png"],
+        label_visibility="visible"
+    )
 
-    if st.button(
-        "⚡ INITIATE NEURAL ANALYSIS",
-        type="primary",
-        use_container_width=True
-    ):
+    if uploaded_file:
 
-        # ====================================================
-        # SCANNING ANIMATION
-        # ====================================================
+        image = Image.open(
+            uploaded_file
+        ).convert("RGB")
 
-        scan_placeholder = st.empty()
-
-        for message in [
-            "INITIALIZING VISION ENGINE...",
-            "ANALYZING LEAF STRUCTURE...",
-            "SCANNING VISUAL FEATURES...",
-            "COMPARING NEURAL PATTERNS...",
-            "CALCULATING PROBABILITIES..."
-        ]:
-
-            scan_placeholder.markdown(
-                f"""
-                <div class="scanning">
-
-                {message}
-
-                <br><br>
-
-                <div class="scan-line"></div>
-
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-
-            time.sleep(0.35)
-
-        # ====================================================
-        # PREPROCESS
-        # ====================================================
-
-        resized = image.resize((224, 224))
-
-        image_array = np.array(
-            resized
-        ).astype("float32")
-
-        image_array = np.expand_dims(
-            image_array,
-            axis=0
+        st.image(
+            image,
+            use_container_width=True
         )
-
-        # ====================================================
-        # PREDICT
-        # ====================================================
-
-        predictions = model.predict(
-            image_array,
-            verbose=0
-        )[0]
-
-        top_indices = np.argsort(
-            predictions
-        )[-5:][::-1]
-
-        scan_placeholder.empty()
-
-        # ====================================================
-        # BEST RESULT
-        # ====================================================
-
-        best_index = top_indices[0]
-
-        best_class = class_names[
-            best_index
-        ]
-
-        confidence = (
-            predictions[best_index] * 100
-        )
-
-        # ====================================================
-        # RESULT
-        # ====================================================
 
         st.markdown(
             f"""
-            <div class="result">
-
-            <div class="result-label">
-            NEURAL ANALYSIS COMPLETE
+            <div style="
+                margin-top:10px;
+                color:#557363;
+                font-family:monospace;
+                font-size:9px;
+                letter-spacing:1px;
+            ">
+                SPECIMEN LOADED ::
+                {uploaded_file.name}
             </div>
+            """,
+            unsafe_allow_html=True
+        )
 
-            <div class="result-name">
-            🌿 {best_class}
-            </div>
+        st.write("")
 
-            <div class="result-confidence">
-            {confidence:.2f}% CONFIDENCE
+        analyze = st.button(
+            "⚡ INITIATE NEURAL SCAN",
+            use_container_width=True
+        )
+
+        if analyze:
+
+            scanner = st.empty()
+
+            stages = [
+                "INITIALIZING VISION ENGINE",
+                "CALIBRATING BIOLOGICAL SCANNER",
+                "EXTRACTING VISUAL FEATURES",
+                "ANALYZING LEAF STRUCTURE",
+                "MATCHING DISEASE PATTERNS",
+                "CALCULATING PROBABILITIES",
+                "FINALIZING DIAGNOSIS"
+            ]
+
+            for stage in stages:
+
+                scanner.markdown(
+                    f"""
+                    <div class="scanner">
+
+                        <div class="scanner-status">
+                            {stage}...
+                        </div>
+
+                        <div class="scan-track">
+
+                            <div class="scan-beam">
+                            </div>
+
+                        </div>
+
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+
+                time.sleep(0.22)
+
+            # ----------------------------------------------
+            # PREPROCESS
+            # ----------------------------------------------
+
+            resized = image.resize(
+                (224, 224)
+            )
+
+            image_array = np.asarray(
+                resized
+            ).astype("float32")
+
+            image_array = np.expand_dims(
+                image_array,
+                axis=0
+            )
+
+            # ----------------------------------------------
+            # PREDICTION
+            # ----------------------------------------------
+
+            predictions = model.predict(
+                image_array,
+                verbose=0
+            )[0]
+
+            top_indices = np.argsort(
+                predictions
+            )[-5:][::-1]
+
+            best_index = top_indices[0]
+
+            best_class = class_names[
+                best_index
+            ]
+
+            confidence = (
+                float(predictions[best_index])
+                * 100
+            )
+
+            st.session_state["result"] = {
+                "class": best_class,
+                "confidence": confidence,
+                "predictions": predictions,
+                "top_indices": top_indices
+            }
+
+            scanner.empty()
+
+# ============================================================
+# RIGHT — DIAGNOSIS
+# ============================================================
+
+with right:
+
+    st.markdown(
+        """
+        <div class="panel">
+
+            <div class="panel-title">
+
+                <div class="panel-title-main">
+                    ◈ Neural Diagnostics
+                </div>
+
+                <div class="panel-tag">
+                    AI CORE
+                </div>
+
             </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    if "result" not in st.session_state:
+
+        st.markdown(
+            """
+            <div style="
+                min-height:380px;
+                display:flex;
+                flex-direction:column;
+                justify-content:center;
+                align-items:center;
+                text-align:center;
+            ">
+
+                <div style="
+                    font-size:55px;
+                    opacity:0.55;
+                    filter:
+                        drop-shadow(
+                            0 0 20px
+                            rgba(0,255,130,0.25)
+                        );
+                ">
+                    🧬
+                </div>
+
+                <div style="
+                    margin-top:20px;
+                    color:#769281;
+                    font-size:12px;
+                    letter-spacing:2px;
+                ">
+                    AWAITING SPECIMEN
+                </div>
+
+                <div style="
+                    margin-top:10px;
+                    color:#405748;
+                    font-size:10px;
+                ">
+                    Upload a leaf to begin neural analysis
+                </div>
 
             </div>
             """,
             unsafe_allow_html=True
         )
 
-        # ====================================================
-        # STATUS
-        # ====================================================
+    else:
 
-        if "healthy" in best_class.lower():
+        result = st.session_state["result"]
 
-            st.success(
-                "🟢 HEALTH STATUS: The model predicts that "
-                "this plant appears healthy."
-            )
+        best_class = result["class"]
 
-        else:
+        confidence = result["confidence"]
 
-            st.warning(
-                "🔴 HEALTH STATUS: A possible plant disease "
-                "has been detected."
-            )
+        predictions = result["predictions"]
 
-        # ====================================================
+        top_indices = result["top_indices"]
+
+        # ----------------------------------------------
+        # DIAGNOSIS CARD
+        # ----------------------------------------------
+
+        st.markdown(
+            f"""
+            <div class="diagnosis">
+
+                <div class="diagnosis-kicker">
+                    NEURAL ANALYSIS COMPLETE
+                </div>
+
+                <div class="diagnosis-name">
+                    {pretty_name(best_class)}
+                </div>
+
+                <div class="diagnosis-confidence">
+                    {confidence:.2f}%
+                </div>
+
+                <div class="confidence-label">
+                    {confidence_label(confidence)}
+                    CONFIDENCE
+                </div>
+
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+        # ----------------------------------------------
+        # ANALYSIS STATUS
+        # ----------------------------------------------
+
+        status_text = (
+            "PLANT APPEARS HEALTHY"
+            if is_healthy(best_class)
+            else "POSSIBLE DISEASE DETECTED"
+        )
+
+        status_icon = (
+            "🟢"
+            if is_healthy(best_class)
+            else "🟠"
+        )
+
+        st.markdown(
+            f"""
+            <div style="
+                margin-top:20px;
+                padding:15px;
+                border-radius:15px;
+                background:rgba(255,255,255,0.025);
+                border:1px solid rgba(255,255,255,0.06);
+                text-align:center;
+                color:#91aa99;
+                font-size:10px;
+                letter-spacing:2px;
+            ">
+
+                {status_icon}
+                &nbsp;
+                {status_text}
+
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+        # ----------------------------------------------
         # TOP PREDICTIONS
-        # ====================================================
+        # ----------------------------------------------
 
-        st.markdown("""
-        <div class="glass">
-
-        <div class="section-title">
-        📊 Neural Probability Matrix
-        </div>
-
-        """, unsafe_allow_html=True)
+        st.markdown(
+            """
+            <div style="
+                margin-top:28px;
+                color:#72e69b;
+                font-size:10px;
+                font-weight:800;
+                letter-spacing:3px;
+            ">
+                PROBABILITY MATRIX
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
         for rank, index in enumerate(top_indices):
 
-            disease = class_names[index]
+            name = pretty_name(
+                class_names[index]
+            )
 
             probability = (
-                predictions[index] * 100
-            )
-
-            st.write(
-                f"**#{rank + 1}  {disease}**"
-            )
-
-            st.progress(
                 float(predictions[index])
+                * 100
             )
 
-            st.caption(
-                f"{probability:.2f}% probability"
+            st.markdown(
+                f"""
+                <div class="prediction">
+
+                    <div class="prediction-head">
+
+                        <span>
+                            #{rank + 1}
+                            &nbsp;
+                            {name}
+                        </span>
+
+                        <span class="prediction-value">
+                            {probability:.2f}%
+                        </span>
+
+                    </div>
+
+                    <div class="bar">
+
+                        <div
+                            class="bar-fill"
+                            style="width:{min(probability,100)}%;"
+                        ></div>
+
+                    </div>
+
+                </div>
+                """,
+                unsafe_allow_html=True
             )
 
-        st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown(
+        "</div>",
+        unsafe_allow_html=True
+    )
 
 # ============================================================
 # INFORMATION
 # ============================================================
 
-st.markdown("<br>", unsafe_allow_html=True)
+st.markdown("<br><br>", unsafe_allow_html=True)
 
-with st.expander("🧠 HOW THE AI WORKS"):
+st.markdown(
+    """
+    <div class="panel">
 
-    st.markdown("""
-    **1. Image Input**
+        <div class="panel-title">
 
-    The uploaded leaf image is processed by the application.
+            <div class="panel-title-main">
+                ◇ Intelligence Core
+            </div>
 
-    **2. Feature Extraction**
+            <div class="panel-tag">
+                SYSTEM
+            </div>
 
-    The neural network analyzes visual patterns in the leaf.
+        </div>
 
-    **3. Classification**
+        <div class="info-grid">
 
-    The model compares the image against 38 learned classes.
+            <div class="info-card">
 
-    **4. Probability Analysis**
+                <div class="info-icon">
+                    👁️
+                </div>
 
-    The system calculates the probability of each class.
+                <div class="info-title">
+                    VISUAL ANALYSIS
+                </div>
 
-    **5. Final Prediction**
+                <div class="info-text">
+                    The neural network examines
+                    visual characteristics within
+                    the uploaded leaf image.
+                </div>
 
-    The class with the highest probability is displayed.
-    """)
+            </div>
 
-with st.expander("🎯 GET BETTER RESULTS"):
+            <div class="info-card">
 
-    st.markdown("""
-    • Use a clear photograph.
+                <div class="info-icon">
+                    🧬
+                </div>
 
-    • Keep the leaf well illuminated.
+                <div class="info-title">
+                    38-CLASS ENGINE
+                </div>
 
-    • Avoid extreme blur.
+                <div class="info-text">
+                    The model evaluates the image
+                    against 38 learned plant-health
+                    categories.
+                </div>
 
-    • Keep the main leaf visible.
+            </div>
 
-    • Avoid images containing many overlapping leaves.
-    """)
+            <div class="info-card">
 
-with st.expander("⚠️ IMPORTANT"):
+                <div class="info-icon">
+                    📊
+                </div>
 
-    st.markdown("""
-    This AI system is intended for educational and
-    demonstration purposes.
+                <div class="info-title">
+                    PROBABILITY ENGINE
+                </div>
 
-    The prediction should not be considered a professional
-    agricultural diagnosis.
-    """)
+                <div class="info-text">
+                    Multiple possible classifications
+                    are evaluated before presenting
+                    the strongest prediction.
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+# ============================================================
+# HOW IT WORKS
+# ============================================================
+
+with st.expander("🧠  HOW THE NEURAL ENGINE WORKS"):
+
+    st.markdown(
+        """
+### 01 — IMAGE INPUT
+
+Your leaf photograph enters the vision pipeline.
+
+### 02 — FEATURE EXTRACTION
+
+The trained neural network analyzes visual patterns
+within the image.
+
+### 03 — CLASSIFICATION
+
+The image is compared against the 38 classes
+learned during training.
+
+### 04 — PROBABILITY MATRIX
+
+The model produces a probability for each class.
+
+### 05 — DIAGNOSIS
+
+The highest-probability class becomes the primary
+prediction shown in the diagnostic interface.
+"""
+    )
+
+# ============================================================
+# DISCLAIMER
+# ============================================================
+
+with st.expander("⚠️  IMPORTANT INFORMATION"):
+
+    st.markdown(
+        """
+This application is an educational AI demonstration.
+
+Its prediction should not be treated as a professional
+agricultural diagnosis. For real crop-management decisions,
+consult an agricultural expert.
+"""
+    )
 
 # ============================================================
 # FOOTER
 # ============================================================
 
-st.markdown("""
+st.markdown(
+    """
 <div class="footer">
 
-🌿 PLANTCARE AI
+    PLANTCARE AI
+    &nbsp; • &nbsp;
+    NEURAL PLANT HEALTH INTELLIGENCE
+    &nbsp; • &nbsp;
+    38-CLASS VISION SYSTEM
 
-<br>
+    <br><br>
 
-NEURAL PLANT INTELLIGENCE • 38-CLASS MODEL
-
-<br><br>
-
-SYSTEM ONLINE
+    SYSTEM STATUS: ONLINE
 
 </div>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True
+)
