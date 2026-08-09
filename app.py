@@ -1506,23 +1506,22 @@ if confidence >= 60:
             # ------------------------------------------------
             # DISEASE INFORMATION
             # ------------------------------------------------
+st.markdown(
+    f"""
+    <div class="glass">
 
-            st.markdown(
-                f"""
-                <div class="glass">
+    <h2>
+    {care_info["title"]}
+    </h2>
 
-                <h2>
-                {care_info["title"]}
-                </h2>
+    <p>
+    <strong>Category:</strong>
+    {care_info["type"]}
+    </p>
 
-                <p>
-                <strong>Category:</strong>
-                {care_info["type"]}
-                </p>
-
-                </div>
-                """,
-                unsafe_allow_html=True
+    </div>
+    """,
+    unsafe_allow_html=True
             )
 
 
