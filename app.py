@@ -10,7 +10,7 @@ from PIL import Image
 # ============================================================
 
 st.set_page_config(
-    page_title="PlantCare AI",
+    page_title="PlantCare AI By Shubhra Gautam",
     page_icon="🌿",
     layout="centered",
     initial_sidebar_state="collapsed"
