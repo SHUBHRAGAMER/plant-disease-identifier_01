@@ -1551,19 +1551,17 @@ else:
     "ℹ️ Care information for this condition "
     "has not been added to the database yet."
             )
+else:
 
-
-    else:
-
-        st.warning(
-            "⚠️ The model confidence is below 60%. "
-            "A reliable disease-specific recommendation "
-            "cannot be provided."
+    st.warning(
+    "⚠️ The model confidence is below 60%. "
+    "A reliable disease-specific recommendation "
+    "cannot be provided."
         )
 
-        st.info(
-            "💡 Try uploading a clearer photograph of the "
-            "plant leaf with good lighting."
+    st.info(
+    "💡 Try uploading a clearer photograph of the "
+    "plant leaf with good lighting."
         )
 
 
