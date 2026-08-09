@@ -1496,11 +1496,11 @@ st.markdown("""
     # CHECK CONFIDENCE
     # ----------------------------------------------------
 
-    if confidence >= 60:
+if confidence >= 60:
 
-        if best_class in CARE_GUIDE:
+    if best_class in CARE_GUIDE:
 
-            care_info = CARE_GUIDE[best_class]
+        care_info = CARE_GUIDE[best_class]
 
 
             # ------------------------------------------------
