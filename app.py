@@ -674,62 +674,108 @@ Choose how you want to provide the leaf image.
 </div>
 """, unsafe_allow_html=True)
 
-tab1, tab2, tab3 = st.tabs([
-    "📁 UPLOAD",
-    "📷 CAMERA",
-    "📋 PASTE"
+# Create two tabs
+upload_tab, camera_tab = st.tabs([
+    "📁 UPLOAD IMAGE",
+    "📷 OPEN CAMERA"
 ])
 
 uploaded_file = None
 
-# ------------------------------------------------------------
-# TAB 1 — UPLOAD
-# ------------------------------------------------------------
+# ============================================================
+# UPLOAD IMAGE
+# ============================================================
 
-with tab1:
+with upload_tab:
 
-    uploaded_file = st.file_uploader(
-        "Choose a leaf image",
+    st.markdown("""
+    <div class="glass">
+
+    <h3>📁 Upload from your device</h3>
+
+    <p>
+    Select a clear photograph of the plant leaf.
+    </p>
+
+    </div>
+    """, unsafe_allow_html=True)
+
+    file_upload = st.file_uploader(
+        "Choose an image",
         type=["jpg", "jpeg", "png"],
-        help="Upload a clear photograph of a plant leaf."
+        help="Supported formats: JPG, JPEG and PNG",
+        label_visibility="collapsed"
     )
 
+    if file_upload is not None:
 
-# ------------------------------------------------------------
-# TAB 2 — CAMERA
-# ------------------------------------------------------------
+        uploaded_file = file_upload
 
-with tab2:
+        st.success(
+            "✅ Image successfully loaded!"
+        )
+
+
+# ============================================================
+# CAMERA
+# ============================================================
+
+with camera_tab:
+
+    st.markdown("""
+    <div class="glass">
+
+    <h3>📷 Take a photo</h3>
+
+    <p>
+    Allow camera access and photograph the plant leaf directly.
+    </p>
+
+    </div>
+    """, unsafe_allow_html=True)
 
     camera_image = st.camera_input(
-        "📷 Take a picture of the plant leaf"
+        "Take a picture of the plant leaf"
     )
 
     if camera_image is not None:
+
         uploaded_file = camera_image
 
+        st.success(
+            "📸 Photo captured successfully!"
+        )
 
-# ------------------------------------------------------------
-# TAB 3 — PASTE
-# ------------------------------------------------------------
 
-with tab3:
+# ============================================================
+# IMAGE PREVIEW
+# ============================================================
 
-    st.markdown("""
-    **📋 Paste an image from your clipboard**
+if uploaded_file is not None:
 
-    Take a screenshot or copy an image and press:
+    image = Image.open(
+        uploaded_file
+    ).convert("RGB")
 
-    **CTRL + V**
-
-    Then paste it below.
-    """)
-
-    pasted_image = st.text_input(
-        "Paste image file path if needed",
-        placeholder="Paste image here..."
+    st.markdown(
+        "### 🔬 SPECIMEN PREVIEW"
     )
 
+    st.image(
+        image,
+        caption="SPECIMEN LOADED",
+        use_container_width=True
+    )
+
+    st.success(
+        "🌿 Ready for neural analysis."
+    )
+
+else:
+
+    st.info(
+        "🌱 Upload an image or use your camera to begin."
+    )
 # ============================================================
 # IMAGE + ANALYSIS
 # ============================================================
