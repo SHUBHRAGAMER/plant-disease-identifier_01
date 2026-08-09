@@ -5,6 +5,7 @@ import json
 import time
 from PIL import Image
 
+
 # ============================================================
 # PAGE CONFIG
 # ============================================================
@@ -15,6 +16,7 @@ st.set_page_config(
     layout="centered",
     initial_sidebar_state="collapsed"
 )
+
 
 # ============================================================
 # FUTURISTIC DARK UI
@@ -47,10 +49,6 @@ st.markdown(
     body {
         font-family: Arial, sans-serif;
     }
-
-    /* ================================
-       HIDE STREAMLIT UI
-    ================================= */
 
     #MainMenu {
         visibility: hidden;
@@ -326,6 +324,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+
 # ============================================================
 # LOAD MODEL
 # ============================================================
@@ -346,8 +345,9 @@ def load_classes():
 model = load_model()
 class_names = load_classes()
 
+
 # ============================================================
-# CARE GUIDE
+# CARE GUIDE — 38 CLASSES
 # ============================================================
 
 CARE_GUIDE = {
@@ -800,6 +800,7 @@ CARE_GUIDE = {
     }
 }
 
+
 # ============================================================
 # HERO
 # ============================================================
@@ -822,6 +823,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 # ============================================================
 # INTRO
@@ -846,6 +848,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+
 # ============================================================
 # MODEL STATS
 # ============================================================
@@ -856,8 +859,15 @@ with col1:
     st.markdown(
         """
         <div class="stat-card">
-            <div class="stat-number">38</div>
-            <div class="stat-label">DISEASE CLASSES</div>
+
+            <div class="stat-number">
+                38
+            </div>
+
+            <div class="stat-label">
+                DISEASE CLASSES
+            </div>
+
         </div>
         """,
         unsafe_allow_html=True
@@ -867,8 +877,15 @@ with col2:
     st.markdown(
         """
         <div class="stat-card">
-            <div class="stat-number">70K+</div>
-            <div class="stat-label">TRAINING IMAGES</div>
+
+            <div class="stat-number">
+                70K+
+            </div>
+
+            <div class="stat-label">
+                TRAINING IMAGES
+            </div>
+
         </div>
         """,
         unsafe_allow_html=True
@@ -878,12 +895,20 @@ with col3:
     st.markdown(
         """
         <div class="stat-card">
-            <div class="stat-number">AI</div>
-            <div class="stat-label">DEEP LEARNING</div>
+
+            <div class="stat-number">
+                AI
+            </div>
+
+            <div class="stat-label">
+                DEEP LEARNING
+            </div>
+
         </div>
         """,
         unsafe_allow_html=True
     )
+
 
 # ============================================================
 # INPUT SECTION
@@ -907,6 +932,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+
 # ============================================================
 # INPUT TABS
 # ============================================================
@@ -919,6 +945,7 @@ upload_tab, camera_tab = st.tabs(
 )
 
 uploaded_file = None
+
 
 # ============================================================
 # UPLOAD TAB
@@ -951,6 +978,7 @@ with upload_tab:
     if file_upload is not None:
         uploaded_file = file_upload
 
+
 # ============================================================
 # CAMERA TAB
 # ============================================================
@@ -964,8 +992,8 @@ with camera_tab:
             <h3>📷 Take a photo</h3>
 
             <p>
-                Allow camera access and photograph the plant leaf
-                directly.
+                Allow camera access and photograph the plant
+                leaf directly.
             </p>
 
         </div>
@@ -979,6 +1007,7 @@ with camera_tab:
 
     if camera_image is not None:
         uploaded_file = camera_image
+
 
 # ============================================================
 # NO IMAGE
@@ -994,7 +1023,9 @@ if uploaded_file is None:
             color:#718b82;
         ">
 
-            <div style="font-size:45px;">🌱</div>
+            <div style="font-size:45px;">
+                🌱
+            </div>
 
             Upload an image or use your camera to begin.
 
@@ -1002,6 +1033,7 @@ if uploaded_file is None:
         """,
         unsafe_allow_html=True
     )
+
 
 # ============================================================
 # IMAGE ANALYSIS
@@ -1041,6 +1073,7 @@ if uploaded_file is not None:
         unsafe_allow_html=True
     )
 
+
     # ========================================================
     # ANALYSIS BUTTON
     # ========================================================
@@ -1050,6 +1083,7 @@ if uploaded_file is not None:
         type="primary",
         use_container_width=True
     )
+
 
     if analyze:
 
@@ -1086,6 +1120,7 @@ if uploaded_file is not None:
 
             time.sleep(0.35)
 
+
         # ====================================================
         # PREPROCESS IMAGE
         # ====================================================
@@ -1103,6 +1138,7 @@ if uploaded_file is not None:
             axis=0
         )
 
+
         # ====================================================
         # MODEL PREDICTION
         # ====================================================
@@ -1118,6 +1154,7 @@ if uploaded_file is not None:
 
         scan_placeholder.empty()
 
+
         # ====================================================
         # BEST RESULT
         # ====================================================
@@ -1131,6 +1168,7 @@ if uploaded_file is not None:
         confidence = (
             float(predictions[best_index]) * 100
         )
+
 
         # ====================================================
         # RESULT CARD
@@ -1157,6 +1195,7 @@ if uploaded_file is not None:
             unsafe_allow_html=True
         )
 
+
         # ====================================================
         # HEALTH STATUS
         # ====================================================
@@ -1174,6 +1213,7 @@ if uploaded_file is not None:
                 "🔴 HEALTH STATUS: A possible plant disease "
                 "has been detected."
             )
+
 
         # ====================================================
         # RECOMMENDED CARE
@@ -1194,6 +1234,7 @@ if uploaded_file is not None:
             """,
             unsafe_allow_html=True
         )
+
 
         # ====================================================
         # CARE CONFIDENCE CHECK
@@ -1259,6 +1300,7 @@ if uploaded_file is not None:
                 "the plant leaf with good lighting."
             )
 
+
         # ====================================================
         # DISCLAIMER
         # ====================================================
@@ -1285,6 +1327,7 @@ if uploaded_file is not None:
             unsafe_allow_html=True
         )
 
+
         # ====================================================
         # TOP PREDICTIONS
         # ====================================================
@@ -1307,9 +1350,8 @@ if uploaded_file is not None:
             unsafe_allow_html=True
         )
 
-        for rank, index in enumerate(
-            top_indices
-        ):
+
+        for rank, index in enumerate(top_indices):
 
             disease = class_names[
                 index
@@ -1331,6 +1373,7 @@ if uploaded_file is not None:
                 f"{probability:.2f}% probability"
             )
 
+
 # ============================================================
 # SYSTEM INFORMATION
 # ============================================================
@@ -1345,6 +1388,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 # ============================================================
 # HOW AI WORKS
@@ -1388,6 +1432,7 @@ with st.expander(
         """
     )
 
+
 # ============================================================
 # BETTER RESULTS
 # ============================================================
@@ -1416,6 +1461,7 @@ with st.expander(
         """
     )
 
+
 # ============================================================
 # IMPORTANT
 # ============================================================
@@ -1436,6 +1482,7 @@ with st.expander(
         reliable local agricultural guidance.
         """
     )
+
 
 # ============================================================
 # FOOTER
